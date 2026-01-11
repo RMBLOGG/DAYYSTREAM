@@ -40,6 +40,13 @@
             <div class="anime-card">
                 <div class="anime-poster">
                     <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                    {% if anime.status %}
+                    <span class="badge {% if anime.status == 'Completed' %}badge-completed{% elif anime.status == 'Ongoing' %}badge-ongoing{% else %}badge-recent{% endif %}">
+                        {{ anime.status }}
+                    </span>
+                    {% elif anime.type == 'Movie' %}
+                    <span class="badge badge-movie">Movie</span>
+                    {% endif %}
                 </div>
                 <div class="anime-info">
                     <div class="anime-title">{{ anime.title }}</div>
@@ -52,6 +59,9 @@
                                 ⭐ {{ anime.score }}
                             {% endif %}
                         </div>
+                        {% endif %}
+                        {% if anime.type and anime.type != 'Movie' %}
+                        <div class="meta-item">📺 {{ anime.type }}</div>
                         {% endif %}
                         {% if anime.genreList %}
                         <div class="meta-item">🎭 {{ anime.genreList[:2]|map(attribute='title')|join(', ') }}</div>
