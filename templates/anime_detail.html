@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}{{ anime.title if anime else 'Detail Anime' }} - DayyStream{% endblock %}
+
+{% block content %}
+
+{% if anime %}
+<div class="detail-container">
+    <div class="detail-header">
+        <div class="detail-poster">
+            <img src="{{ anime.poster }}" alt="{{ anime.title }}">
+        </div>
+        
+        <div class="detail-content">
+            <h2>{{ anime.title }}</h2>
+            
+            <div class="detail-info">
+                {% if anime.japanese %}
+                <div class="info-item">
+                    <div class="info-label">🇯🇵 Japanese Title</div>
+                    <div class="info-value">{{ anime.japanese }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.get('score') %}
+                <div class="info-item">
+                    <div class="info-label">⭐ Score</div>
+                    <div class="info-value">
+                        {% set score_val = anime.get('score') %}
+                        {% if score_val is mapping and score_val.get('value') %}
+                            {{ score_val.get('value') }}
+                            {% if score_val.get('users') %}
+                                <span style="font-size: 11px; color: var(--text-secondary);">({{ score_val.get('users') }} users)</span>
+                            {% endif %}
+                        {% else %}
+                            {{ score_val }}
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if anime.type %}
+                <div class="info-item">
+                    <div class="info-label">📺 Type</div>
+                    <div class="info-value">{{ anime.type }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.status %}
+                <div class="info-item">
+                    <div class="info-label">📊 Status</div>
+                    <div class="info-value">{{ anime.status }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.totalEpisodes %}
+                <div class="info-item">
+                    <div class="info-label">🎬 Total Episodes</div>
+                    <div class="info-value">{{ anime.totalEpisodes }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.duration %}
+                <div class="info-item">
+                    <div class="info-label">⏱️ Duration</div>
+                    <div class="info-value">{{ anime.duration }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.releaseDate %}
+                <div class="info-item">
+                    <div class="info-label">📅 Release Date</div>
+                    <div class="info-value">{{ anime.releaseDate }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.studios %}
+                <div class="info-item">
+                    <div class="info-label">🏢 Studios</div>
+                    <div class="info-value">{{ anime.studios }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.producers %}
+                <div class="info-item">
+                    <div class="info-label">🏭 Producers</div>
+                    <div class="info-value">{{ anime.producers }}</div>
+                </div>
+                {% endif %}
+                
+                {% if anime.genreList %}
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <div class="info-label">🎭 Genres</div>
+                    <div class="info-value">
+                        {{ anime.genreList|map(attribute='title')|join(', ') }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if anime.synopsis %}
+            <div class="synopsis-box">
+                <strong>📝 Synopsis</strong>
+                {% if anime.synopsis.paragraphs %}
+                    {% for paragraph in anime.synopsis.paragraphs %}
+                    <p style="margin-bottom: 10px;">{{ paragraph }}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>{{ anime.synopsis }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if anime.episodeList %}
+    <section class="section">
+        <div class="section-header episode-header" onclick="toggleEpisodeList()">
+            <h2 class="section-title">📺 Daftar Episode</h2>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="color: var(--text-secondary);">{{ anime.episodeList|length }} Episode</span>
+                <span class="episode-toggle" id="episodeToggle">▼</span>
+            </div>
+        </div>
+        
+        <div class="episode-list-wrapper" id="episodeListWrapper">
+            <div class="episode-list">
+                {% for episode in anime.episodeList|reverse %}
+                <a href="/episode/{{ episode.episodeId }}" class="episode-item">
+                    <span class="episode-title">
+                        {{ episode.title if episode.title else episode.episodeId }}
+                    </span>
+                    <span class="episode-date">
+                        {{ episode.releaseDate if episode.releaseDate else (episode.date if episode.date else '') }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    
+    {% if is_batch and anime.downloadUrl and anime.downloadUrl.formats %}
+    <section class="section">
+        <div class="download-section">
+            <div class="section-header" style="border: none; padding-bottom: 0;">
+                <h2 class="section-title">⬇️ Download Batch</h2>
+            </div>
+            
+            {% for format_group in anime.downloadUrl.formats %}
+            <div class="download-format">
+                <h3 class="format-title">{{ format_group.title }}</h3>
+                
+                {% for quality in format_group.qualities %}
+                <div class="quality-group">
+                    <div class="quality-title">{{ quality.title }}</div>
+                    <div class="download-links">
+                        {% for url in quality.urls %}
+                        <a href="{{ url.url }}" target="_blank" class="download-btn">
+                            {{ url.title }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+{% else %}
+<div style="text-align: center; padding: 100px 20px;">
+    <div style="font-size: 80px; margin-bottom: 20px;">😕</div>
+    <h2 style="color: var(--text-secondary);">Anime tidak ditemukan</h2>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleEpisodeList() {
+    const wrapper = document.getElementById('episodeListWrapper');
+    const toggle = document.getElementById('episodeToggle');
+    
+    if (wrapper && toggle) {
+        wrapper.classList.toggle('open');
+        toggle.classList.toggle('open');
+    }
+}
+</script>
+{% endblock %}

@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>{% block title %}DayyStream - Nonton Anime Subtitle Indonesia{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/" class="sidebar-logo">
+                <div class="logo-icon">🎌</div>
+                <div class="logo-text">
+                    <h1>DAYYSTREAM</h1>
+                    <p>Nonton Anime Sub Indo</p>
+                </div>
+            </a>
+            <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+        </div>
 
+        <nav class="sidebar-nav">
+            <a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">
+                <span class="nav-icon">▶</span>
+                <span class="nav-text">Home</span>
+            </a>
+            <a href="/recent" class="nav-item {% if request.path == '/recent' %}active{% endif %}">
+                <span class="nav-icon">★</span>
+                <span class="nav-text">Terbaru</span>
+            </a>
+            <a href="/ongoing" class="nav-item {% if request.path == '/ongoing' %}active{% endif %}">
+                <span class="nav-icon">◉</span>
+                <span class="nav-text">Ongoing</span>
+            </a>
+            <a href="/completed" class="nav-item {% if request.path == '/completed' %}active{% endif %}">
+                <span class="nav-icon">✓</span>
+                <span class="nav-text">Completed</span>
+            </a>
+            <a href="/popular" class="nav-item {% if request.path == '/popular' %}active{% endif %}">
+                <span class="nav-icon">♨</span>
+                <span class="nav-text">Popular</span>
+            </a>
+            <a href="/schedule" class="nav-item {% if request.path == '/schedule' %}active{% endif %}">
+                <span class="nav-icon">◷</span>
+                <span class="nav-text">Jadwal</span>
+            </a>
+            <a href="/movies" class="nav-item {% if request.path == '/movies' %}active{% endif %}">
+                <span class="nav-icon">▣</span>
+                <span class="nav-text">Movies</span>
+            </a>
+            <a href="/genres" class="nav-item {% if request.path == '/genres' or request.path.startswith('/genres/') %}active{% endif %}">
+                <span class="nav-icon">◈</span>
+                <span class="nav-text">Genres</span>
+            </a>
+            <a href="/list" class="nav-item {% if request.path == '/list' %}active{% endif %}">
+                <span class="nav-icon">≡</span>
+                <span class="nav-text">List A-Z</span>
+            </a>
+            <a href="/batch" class="nav-item {% if request.path == '/batch' %}active{% endif %}">
+                <span class="nav-icon">⊞</span>
+                <span class="nav-text">Batch</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>© 2026 DAYYSTREAM</p>
+            <p>Nonton Anime Subtitle Indonesia</p>
+        </div>
+    </aside>
+
+    <!-- Overlay for mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <a href="/" class="header-logo-mobile">
+                        <div class="logo-icon">🎌</div>
+                        <span>DAYYSTREAM</span>
+                    </a>
+                    
+                    <div class="header-search">
+                        <form action="/search" method="get">
+                            <input type="text" name="q" placeholder="Cari anime..." value="{{ query if query else '' }}">
+                            <button type="submit">🔍</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+                {% if error %}
+                <div class="alert">
+                    <span>⚠️</span>
+                    <span>{{ error }}</span>
+                </div>
+                {% endif %}
+                
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        // Close sidebar when clicking nav item on mobile
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

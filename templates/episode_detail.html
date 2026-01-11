@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block title %}{{ episode.title if episode else 'Episode' }} - DayyStream{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Futuristic Navigation Buttons */
+.navigation-buttons {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    position: relative;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(41, 128, 185, 0.15));
+    color: var(--accent-color);
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    overflow: hidden;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.5), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-btn:hover::before {
+    left: 100%;
+}
+
+.nav-btn:hover {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(41, 128, 185, 0.3));
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(52, 152, 219, 0.3), 0 0 20px rgba(52, 152, 219, 0.1);
+    color: #fff;
+}
+
+.nav-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+/* Glow effect on hover */
+.nav-btn:hover {
+    text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+@media (max-width: 480px) {
+    .nav-btn {
+        font-size: 11px;
+        padding: 7px 16px;
+        gap: 5px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if episode %}
+<div class="detail-container">
+    <section class="section">
+        <div class="section-header" style="border-bottom: 2px solid var(--border-color); padding-bottom: 20px; margin-bottom: 20px;">
+            {% if episode.animeId %}
+          <!--   <div style="margin-bottom: 10px;">
+                <a href="/anime/{{ episode.animeId }}" style="color: var(--primary-color); text-decoration: none; font-size: 16px; display: inline-flex; align-items: center; gap: 8px;">
+                    <span>⬅️</span>
+                    <span>{{ episode.animeId.replace('-', ' ').title() }}</span>
+                </a>
+            </div> -->
+            {% endif %}
+            <h2 class="section-title">🎬 {{ episode.title }}</h2>
+        </div>
+        
+        {% if episode.server and episode.server.qualities %}
+        <div class="player-controls">
+            <div style="background: rgba(52, 152, 219, 0.1); border-left: 3px solid var(--accent-color); padding: 12px 15px; border-radius: 8px; margin-bottom: 15px;">
+                <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                    ℹ️ <strong style="color: var(--accent-color);">Info:</strong> Jika video tidak dapat diputar atau error, silakan coba <strong>kualitas lain</strong> atau <strong>server lain</strong> yang tersedia di bawah.
+                </p>
+            </div>
+            
+            <div class="controls-row">
+                <label class="controls-label">Pilih Kualitas:</label>
+                <div class="quality-tabs">
+                    {% for quality_group in episode.server.qualities %}
+                        {% if quality_group.serverList %}
+                        <button class="quality-tab {% if loop.first %}active{% endif %}" 
+                                onclick="showQuality('{{ quality_group.title }}')">
+                            {{ quality_group.title }}
+                        </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="controls-row">
+                <label class="controls-label">Pilih Server:</label>
+                {% for quality_group in episode.server.qualities %}
+                    {% if quality_group.serverList %}
+                    <div id="quality-{{ quality_group.title }}" 
+                         class="server-buttons" 
+                         style="{% if not loop.first %}display: none;{% endif %}">
+                        {% for server in quality_group.serverList %}
+                        <button class="server-btn {% if loop.first %}active{% endif %}" 
+                                id="btn-{{ server.serverId }}"
+                                onclick="changeServer('{{ server.serverId }}')">
+                            {{ server.title }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="player-container">
+            <iframe id="video-player" 
+                    src="{{ episode.defaultStreamingUrl if episode.defaultStreamingUrl else '' }}"
+                    allowfullscreen>
+            </iframe>
+        </div>
+        
+        {% if episode.hasPrevEpisode or episode.hasNextEpisode %}
+        <div class="navigation-buttons" style="margin-top: 20px;">
+            {% if episode.hasPrevEpisode and episode.prevEpisode %}
+            <a href="/episode/{{ episode.prevEpisode.episodeId }}" class="nav-btn">
+                <span>&#9664;</span> Episode Sebelumnya
+            </a>
+            {% endif %}
+            
+            {% if episode.hasNextEpisode and episode.nextEpisode %}
+            <a href="/episode/{{ episode.nextEpisode.episodeId }}" class="nav-btn">
+                Episode Selanjutnya <span>&#9654;</span>
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </section>
+    
+    <div class="detail-header" style="margin-top: 30px;">
+        <div class="detail-poster">
+            <img src="{{ episode.poster }}" alt="{{ episode.title }}">
+        </div>
+        
+        <div class="detail-content">
+            <div class="detail-info">
+                {% if episode.animeId %}
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <div class="info-label">🎌 Anime</div>
+                    <div class="info-value">
+                        <a href="/anime/{{ episode.animeId }}" 
+                           style="color: var(--primary-color); text-decoration: none;">
+                            {{ episode.animeId.replace('-', ' ').title() }}
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if episode.releasedOn %}
+                <div class="info-item">
+                    <div class="info-label">🕒 Release Date</div>
+                    <div class="info-value">{{ episode.releasedOn }}</div>
+                </div>
+                {% endif %}
+                
+                {% if episode.genreList %}
+                <div class="info-item" style="grid-column: 1 / -1;">
+                    <div class="info-label">🎭 Genres</div>
+                    <div class="info-value">
+                        {{ episode.genreList|map(attribute='title')|join(', ') }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if episode.synopsis and episode.synopsis.paragraphs %}
+            <div class="synopsis-box">
+                <strong>📝 Synopsis</strong>
+                {% for paragraph in episode.synopsis.paragraphs %}
+                <p style="margin-bottom: 10px;">{{ paragraph }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if episode.fullEpisodeList %}
+    <section class="section">
+        <div class="section-header episode-header" onclick="toggleEpisodeList()">
+            <h2 class="section-title">📺 Daftar Episode</h2>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="color: var(--text-secondary);">{{ episode.fullEpisodeList|length }} Episode</span>
+                <span class="episode-toggle" id="episodeToggle">▼</span>
+            </div>
+        </div>
+        
+        <div class="episode-list-wrapper" id="episodeListWrapper">
+            <div class="episode-list">
+                {% for ep in episode.fullEpisodeList %}
+                <a href="/episode/{{ ep.episodeId }}" class="episode-item">
+                    <span class="episode-title">
+                        {{ ep.title if ep.title else ep.episodeId }}
+                    </span>
+                    <span class="episode-date">
+                        {{ ep.releaseDate if ep.releaseDate else (ep.date if ep.date else '') }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% elif episode.recommendedEpisodeList %}
+    <section class="section">
+        <div class="section-header episode-header" onclick="toggleEpisodeList()">
+            <h2 class="section-title">📺 Daftar Episode</h2>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="color: var(--text-secondary);">{{ episode.recommendedEpisodeList|length }} Episode</span>
+                {% if episode.animeId %}
+                <a href="/anime/{{ episode.animeId }}" 
+                   style="color: var(--accent-color); text-decoration: none; font-size: 14px; font-weight: 600;">
+                    Lihat Semua Episode →
+                </a>
+                {% endif %}
+                <span class="episode-toggle" id="episodeToggle">▼</span>
+            </div>
+        </div>
+        
+        <div class="episode-list-wrapper" id="episodeListWrapper">
+            <div class="episode-list">
+                {% for ep in episode.recommendedEpisodeList %}
+                <a href="/episode/{{ ep.episodeId }}" class="episode-item">
+                    <span class="episode-title">
+                        {{ ep.title if ep.title else ep.episodeId }}
+                    </span>
+                    <span class="episode-date">
+                        {{ ep.releaseDate if ep.releaseDate else '' }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    
+    {% if episode.downloadUrl and episode.downloadUrl.formats %}
+    <section class="section">
+        <div class="download-section">
+            <div class="section-header" style="border: none; padding-bottom: 0;">
+                <h2 class="section-title">⬇️ Download Episode</h2>
+            </div>
+            
+            {% for format_group in episode.downloadUrl.formats %}
+            <div class="download-format">
+                <h3 class="format-title">{{ format_group.title }}</h3>
+                
+                {% for quality in format_group.qualities %}
+                <div class="quality-group">
+                    <div class="quality-title">{{ quality.title }}</div>
+                    <div class="download-links">
+                        {% for url in quality.urls %}
+                        <a href="{{ url.url }}" target="_blank" class="download-btn">
+                            {{ url.title }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+    
+</div>
+
+{% else %}
+<div style="text-align: center; padding: 100px 20px;">
+    <div style="font-size: 80px; margin-bottom: 20px;">😕</div>
+    <h2 style="color: var(--text-secondary);">Episode tidak ditemukan</h2>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleEpisodeList() {
+    const wrapper = document.getElementById('episodeListWrapper');
+    const toggle = document.getElementById('episodeToggle');
+    
+    if (wrapper && toggle) {
+        wrapper.classList.toggle('open');
+        toggle.classList.toggle('open');
+    }
+}
+
+function showQuality(quality) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.quality-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Hide all server button groups
+    document.querySelectorAll('.server-buttons').forEach(group => {
+        group.style.display = 'none';
+    });
+    
+    // Add active class to clicked tab
+    event.target.classList.add('active');
+    
+    // Show selected quality's servers
+    const selectedGroup = document.getElementById('quality-' + quality);
+    if (selectedGroup) {
+        selectedGroup.style.display = 'flex';
+    }
+}
+
+async function changeServer(serverId) {
+    // Remove active class from all server buttons
+    document.querySelectorAll('.server-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked button
+    const clickedBtn = document.getElementById('btn-' + serverId);
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+    }
+    
+    try {
+        const response = await fetch('/api/server/' + serverId);
+        const data = await response.json();
+        
+        if (data.url) {
+            document.getElementById('video-player').src = data.url;
+        } else {
+            alert('Gagal memuat server. Silakan coba server lain.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat memuat server: ' + error.message);
+    }
+}
+</script>
+{% endblock %}

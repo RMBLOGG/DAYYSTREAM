@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}Home - DayyStream Anime{% endblock %}
+
+{% block content %}
+
+{% if recent %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">
+            {% if 'Completed' in page_title|default('') %}✅
+            {% elif 'Popular' in page_title|default('') %}🔥
+            {% elif 'Ongoing' in page_title|default('') %}📡
+            {% else %}🔥
+            {% endif %}
+            {{ page_title if page_title else 'Anime Terbaru' }}
+        </h2>
+        {% if not page_title %}
+        <a href="/recent" class="view-all">Lihat Semua →</a>
+        {% endif %}
+    </div>
+    <div class="anime-grid">
+        {% for anime in recent %}
+        <a href="/anime/{{ anime.animeId }}" class="card-link">
+            <div class="anime-card">
+                <div class="anime-poster">
+                    <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                    {% if anime.status %}
+                    <span class="badge {% if anime.status == 'Completed' %}badge-completed{% elif anime.status == 'Ongoing' %}badge-ongoing{% else %}badge-recent{% endif %}">
+                        {{ anime.status }}
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">{{ anime.title }}</div>
+                    <div class="anime-meta">
+                        {% if anime.episodes %}
+                        <div class="meta-item">📺 Episode {{ anime.episodes }}</div>
+                        {% endif %}
+                        {% if anime.releasedOn %}
+                        <div class="meta-item">🕒 {{ anime.releasedOn }}</div>
+                        {% endif %}
+                        {% if not anime.episodes and not anime.releasedOn %}
+                            {% if anime.type %}
+                            <div class="meta-item">📺 {{ anime.type }}</div>
+                            {% endif %}
+                            {% if anime.score %}
+                            <div class="meta-item">
+                                {% if anime.score is mapping %}
+                                    ⭐ {{ anime.score['value'] }}
+                                {% else %}
+                                    ⭐ {{ anime.score }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if top10 %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">🏆 Top 10 Anime</h2>
+    </div>
+    <div class="anime-grid">
+        {% for anime in top10 %}
+        <a href="/anime/{{ anime.animeId }}" class="card-link">
+            <div class="anime-card">
+                <div class="rank-badge">#{{ anime.rank if anime.rank else loop.index }}</div>
+                <div class="anime-poster">
+                    <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">{{ anime.title }}</div>
+                    <div class="anime-meta">
+                        {% if anime.score %}
+                        <div class="meta-item">
+                            {% if anime.score is mapping %}
+                                ⭐ {{ anime.score['value'] }}
+                            {% else %}
+                                ⭐ {{ anime.score }}
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% if anime.type %}
+                        <div class="meta-item">📺 {{ anime.type }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if movies %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">🎬 Anime Movies</h2>
+        {% if not page_title or 'Movie' not in page_title %}
+        <a href="/movies" class="view-all">Lihat Semua →</a>
+        {% endif %}
+    </div>
+    <div class="anime-grid">
+        {% for anime in movies %}
+        <a href="/anime/{{ anime.animeId }}" class="card-link">
+            <div class="anime-card">
+                <div class="anime-poster">
+                    <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                    <span class="badge badge-movie">Movie</span>
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">{{ anime.title }}</div>
+                    <div class="anime-meta">
+                        {% if anime.score %}
+                        <div class="meta-item">
+                            {% if anime.score is mapping %}
+                                ⭐ {{ anime.score['value'] }}
+                            {% else %}
+                                ⭐ {{ anime.score }}
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% if anime.genreList %}
+                        <div class="meta-item">🎭 {{ anime.genreList[:2]|map(attribute='title')|join(', ') }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if ongoing %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">📡 Anime Ongoing</h2>
+        {% if not page_title or 'Ongoing' not in page_title %}
+        <a href="/ongoing" class="view-all">Lihat Semua →</a>
+        {% endif %}
+    </div>
+    <div class="anime-grid">
+        {% for anime in ongoing %}
+        <a href="/anime/{{ anime.animeId }}" class="card-link">
+            <div class="anime-card">
+                <div class="anime-poster">
+                    <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                    <span class="badge badge-ongoing">Ongoing</span>
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">{{ anime.title }}</div>
+                    <div class="anime-meta">
+                        {% if anime.episodes %}
+                        <div class="meta-item">📺 Episode {{ anime.episodes }}</div>
+                        {% endif %}
+                        {% if anime.releasedOn %}
+                        <div class="meta-item">🕒 {{ anime.releasedOn }}</div>
+                        {% endif %}
+                        {% if not anime.episodes and not anime.releasedOn %}
+                            {% if anime.type %}
+                            <div class="meta-item">📺 {{ anime.type }}</div>
+                            {% endif %}
+                            {% if anime.score %}
+                            <div class="meta-item">
+                                {% if anime.score is mapping %}
+                                    ⭐ {{ anime.score['value'] }}
+                                {% else %}
+                                    ⭐ {{ anime.score }}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if batch_list %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">📦 Batch Download</h2>
+        {% if not page_title or 'Batch' not in page_title %}
+        <a href="/batch" class="view-all">Lihat Semua →</a>
+        {% endif %}
+    </div>
+    <div class="anime-grid">
+        {% for batch in batch_list %}
+        <a href="/batch/{{ batch.batchId }}" class="card-link">
+            <div class="anime-card">
+                <div class="anime-poster">
+                    <img src="{{ batch.poster }}" alt="{{ batch.title }}" loading="lazy">
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">{{ batch.title }}</div>
+                    {% if batch.type or batch.score %}
+                    <div class="anime-meta">
+                        {% if batch.type %}
+                        <div class="meta-item">📺 {{ batch.type }}</div>
+                        {% endif %}
+                        {% if batch.score %}
+                        <div class="meta-item">⭐ {{ batch.score }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}

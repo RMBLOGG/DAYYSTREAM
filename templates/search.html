@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if query %}Hasil Pencarian: {{ query }} - DayyStream{% else %}Cari Anime - DayyStream{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="search-container">
+    <h2 class="section-title" style="justify-content: center; margin-bottom: 10px;">
+        🔍 Cari Anime Favoritmu
+    </h2>
+    <p style="color: var(--text-secondary); margin-bottom: 30px;">Temukan ribuan anime subtitle Indonesia</p>
+    
+    <div class="search-box">
+        <form action="/search" method="get">
+            <input type="text" 
+                   name="q" 
+                   placeholder="Masukkan judul anime..." 
+                   value="{{ query if query else '' }}"
+                   autofocus>
+            <button type="submit">Cari</button>
+        </form>
+    </div>
+</div>
+
+{% if query %}
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Hasil untuk "{{ query }}"</h2>
+        {% if anime_list %}
+        <span style="color: var(--text-secondary);">{{ anime_list|length }} hasil ditemukan</span>
+        {% endif %}
+    </div>
+
+    {% if anime_list %}
+    <div class="anime-grid">
+        {% for anime in anime_list %}
+        <a href="/anime/{{ anime.animeId }}" class="card-link">
+            <div class="anime-card">
+                <div class="anime-poster">
+                    <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                </div>
+                <div class="anime-info">
+                    <div class="anime-title">{{ anime.title }}</div>
+                    <div class="anime-meta">
+                        {% if anime.score %}
+                        <div class="meta-item">
+                            {% if anime.score is mapping %}
+                                ⭐ {{ anime.score['value'] }}
+                            {% else %}
+                                ⭐ {{ anime.score }}
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% if anime.genreList %}
+                        <div class="meta-item">🎭 {{ anime.genreList[:2]|map(attribute='title')|join(', ') }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 60px 20px;">
+        <div style="font-size: 60px; margin-bottom: 20px;">😔</div>
+        <h3 style="color: var(--text-secondary); margin-bottom: 10px;">Tidak ada hasil untuk "{{ query }}"</h3>
+        <p style="color: var(--text-secondary);">Coba gunakan kata kunci yang berbeda</p>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+
+{% endblock %}

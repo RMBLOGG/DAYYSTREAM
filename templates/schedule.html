@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Jadwal Rilis Anime - DayyStream{% endblock %}
+
+{% block content %}
+
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">📅 Jadwal Rilis Anime Mingguan</h2>
+    </div>
+
+    {% if schedule_data and schedule_data.days %}
+        {% for day_group in schedule_data.days %}
+            {% if day_group.animeList %}
+            <div class="schedule-day">
+                <h3 class="day-title">
+                    📆 
+                    {% if day_group.day == 'Monday' %}Senin
+                    {% elif day_group.day == 'Tuesday' %}Selasa
+                    {% elif day_group.day == 'Wednesday' %}Rabu
+                    {% elif day_group.day == 'Thursday' %}Kamis
+                    {% elif day_group.day == 'Friday' %}Jumat
+                    {% elif day_group.day == 'Saturday' %}Sabtu
+                    {% elif day_group.day == 'Sunday' %}Minggu
+                    {% else %}{{ day_group.day }}
+                    {% endif %}
+                </h3>
+                <div class="anime-grid">
+                    {% for anime in day_group.animeList %}
+                    <a href="/anime/{{ anime.animeId }}" class="card-link">
+                        <div class="anime-card">
+                            <div class="anime-poster">
+                                {% if anime.poster %}
+                                <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                                {% else %}
+                                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a1f2e, #0f1419); color: var(--text-secondary); font-size: 48px;">
+                                    🎬
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="anime-info">
+                                <div class="anime-title">{{ anime.title }}</div>
+                                <div class="anime-meta">
+                                    {% if anime.estimation %}
+                                    <div class="meta-item">⏱️ {{ anime.estimation }}</div>
+                                    {% endif %}
+                                    {% if anime.score %}
+                                    <div class="meta-item">⭐ {{ anime.score }}</div>
+                                    {% endif %}
+                                    {% if anime.type %}
+                                    <div class="meta-item">📺 {{ anime.type }}</div>
+                                    {% endif %}
+                                </div>
+                                {% if anime.genres %}
+                                <div style="font-size: 11px; color: var(--text-secondary); margin-top: 8px;">
+                                    🎭 {{ anime.genres }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 60px; margin-bottom: 20px;">📅</div>
+            <h3 style="color: var(--text-secondary);">Belum ada jadwal yang tersedia</h3>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}
