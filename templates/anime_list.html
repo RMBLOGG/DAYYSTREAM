@@ -10,39 +10,72 @@
         <span style="color: var(--text-secondary);">Anime A-Z</span>
     </div>
 
-    {% if anime_list %}
-        {% for letter_group in anime_list %}
-        <div style="margin-bottom: 50px;">
-            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
-                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: white; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);">
-                    {{ letter_group.startWith }}
-                </div>
-                <div>
-                    <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 5px;">
-                        {% if letter_group.startWith == '#' %}
-                            Angka & Simbol
-                        {% else %}
-                            Huruf {{ letter_group.startWith }}
-                        {% endif %}
-                    </h3>
-                    <p style="color: var(--text-secondary); font-size: 14px;">
-                        {{ letter_group.animeList|length }} anime
-                    </p>
-                </div>
-            </div>
-
-            <div class="anime-list-grid">
-                {% for anime in letter_group.animeList %}
-                <a href="/anime/{{ anime.animeId }}" class="anime-list-item">
-                    <span class="anime-list-title">{{ anime.title }}</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </a>
-                {% endfor %}
-            </div>
+    <!-- Search Bar -->
+    <div style="margin-bottom: 30px;">
+        <div class="search-container">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input 
+                type="text" 
+                id="searchInput" 
+                class="search-input" 
+                placeholder="Cari anime berdasarkan judul..."
+                autocomplete="off"
+            >
+            <button id="clearSearch" class="clear-btn" style="display: none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
-        {% endfor %}
+        <div id="searchInfo" style="margin-top: 12px; color: var(--text-secondary); font-size: 14px;"></div>
+    </div>
+
+    {% if anime_list %}
+        <div id="animeListContainer">
+            {% for letter_group in anime_list %}
+            <div class="letter-group" data-letter="{{ letter_group.startWith }}">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 25px;">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 800; color: white; box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);">
+                        {{ letter_group.startWith }}
+                    </div>
+                    <div>
+                        <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 5px;">
+                            {% if letter_group.startWith == '#' %}
+                                Angka & Simbol
+                            {% else %}
+                                Huruf {{ letter_group.startWith }}
+                            {% endif %}
+                        </h3>
+                        <p class="group-count" style="color: var(--text-secondary); font-size: 14px;">
+                            {{ letter_group.animeList|length }} anime
+                        </p>
+                    </div>
+                </div>
+
+                <div class="anime-list-grid">
+                    {% for anime in letter_group.animeList %}
+                    <a href="/anime/{{ anime.animeId }}" class="anime-list-item" data-title="{{ anime.title|lower }}">
+                        <span class="anime-list-title">{{ anime.title }}</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" style="display: none; text-align: center; padding: 60px 20px;">
+            <div style="font-size: 60px; margin-bottom: 20px;">🔍</div>
+            <h3 style="color: var(--text-secondary); margin-bottom: 10px;">Anime tidak ditemukan</h3>
+            <p style="color: var(--text-secondary); font-size: 14px;">Coba kata kunci lain atau periksa ejaan</p>
+        </div>
     {% else %}
         <div style="text-align: center; padding: 60px 20px;">
             <div style="font-size: 60px; margin-bottom: 20px;">📚</div>
@@ -52,6 +85,71 @@
 </section>
 
 <style>
+/* Search Container */
+.search-container {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 50px 14px 48px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 15px;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
+}
+
+.clear-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--primary-color);
+}
+
+/* Anime List */
+.letter-group {
+    margin-bottom: 50px;
+    transition: opacity 0.3s ease;
+}
+
+.letter-group.hidden {
+    display: none;
+}
+
 .anime-list-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -69,6 +167,10 @@
     text-decoration: none;
     color: var(--text-primary);
     transition: all 0.3s ease;
+}
+
+.anime-list-item.hidden {
+    display: none;
 }
 
 .anime-list-item:hover {
@@ -93,11 +195,118 @@
     flex-shrink: 0;
 }
 
+/* Highlight search result */
+.anime-list-item.highlight {
+    background: rgba(231, 76, 60, 0.05);
+    border-color: var(--primary-color);
+}
+
 @media (max-width: 768px) {
     .anime-list-grid {
         grid-template-columns: 1fr;
     }
+    
+    .search-input {
+        font-size: 14px;
+    }
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearch');
+    const searchInfo = document.getElementById('searchInfo');
+    const noResults = document.getElementById('noResults');
+    const letterGroups = document.querySelectorAll('.letter-group');
+    const allAnimeItems = document.querySelectorAll('.anime-list-item');
+    
+    let totalAnime = allAnimeItems.length;
+    
+    // Show/hide clear button
+    searchInput.addEventListener('input', function() {
+        clearBtn.style.display = this.value ? 'flex' : 'none';
+        performSearch();
+    });
+    
+    // Clear search
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        clearBtn.style.display = 'none';
+        performSearch();
+        searchInput.focus();
+    });
+    
+    // Search function
+    function performSearch() {
+        const query = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+        let visibleGroups = 0;
+        
+        if (!query) {
+            // Show all
+            letterGroups.forEach(group => {
+                group.classList.remove('hidden');
+                const items = group.querySelectorAll('.anime-list-item');
+                items.forEach(item => {
+                    item.classList.remove('hidden', 'highlight');
+                });
+            });
+            searchInfo.textContent = '';
+            noResults.style.display = 'none';
+            return;
+        }
+        
+        // Filter anime
+        letterGroups.forEach(group => {
+            const items = group.querySelectorAll('.anime-list-item');
+            let groupHasVisible = false;
+            
+            items.forEach(item => {
+                const title = item.getAttribute('data-title');
+                if (title.includes(query)) {
+                    item.classList.remove('hidden');
+                    item.classList.add('highlight');
+                    groupHasVisible = true;
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                    item.classList.remove('highlight');
+                }
+            });
+            
+            // Hide/show group
+            if (groupHasVisible) {
+                group.classList.remove('hidden');
+                visibleGroups++;
+                
+                // Update count in group header
+                const countElement = group.querySelector('.group-count');
+                const groupVisibleCount = group.querySelectorAll('.anime-list-item:not(.hidden)').length;
+                countElement.textContent = `${groupVisibleCount} anime`;
+            } else {
+                group.classList.add('hidden');
+            }
+        });
+        
+        // Show results info
+        if (visibleCount > 0) {
+            searchInfo.innerHTML = `🔍 Ditemukan <strong>${visibleCount}</strong> anime dari <strong>${totalAnime}</strong> anime`;
+            noResults.style.display = 'none';
+        } else {
+            searchInfo.textContent = '';
+            noResults.style.display = 'block';
+        }
+    }
+    
+    // Allow Enter key to search
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            this.blur(); // Remove focus after search
+        }
+    });
+});
+</script>
 
 {% endblock %}
