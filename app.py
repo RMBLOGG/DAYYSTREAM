@@ -60,7 +60,6 @@ def ongoing():
     except Exception as e:
         return render_template('home.html', error=str(e))
 
-# ✨ NEW: Anime Completed
 @app.route('/completed')
 def completed():
     try:
@@ -71,7 +70,6 @@ def completed():
     except Exception as e:
         return render_template('home.html', error=str(e))
 
-# ✨ NEW: Anime Popular
 @app.route('/popular')
 def popular():
     try:
@@ -117,7 +115,6 @@ def anime_list():
     except Exception as e:
         return render_template('anime_list.html', error=str(e))
 
-# ✨ NEW: All Genres
 @app.route('/genres')
 def genres():
     try:
@@ -128,7 +125,6 @@ def genres():
     except Exception as e:
         return render_template('genres.html', error=str(e))
 
-# ✨ NEW: Anime by Genre
 @app.route('/genres/<genre_id>')
 def genre_detail(genre_id):
     try:
@@ -160,6 +156,11 @@ def batch_detail(batch_id):
     except Exception as e:
         return render_template('anime_detail.html', error=str(e))
 
+# ✨ NEW: Bookmark Page
+@app.route('/bookmark')
+def bookmark():
+    return render_template('bookmark.html')
+
 @app.route('/anime/<anime_id>')
 def anime_detail(anime_id):
     try:
@@ -167,7 +168,6 @@ def anime_detail(anime_id):
         data = response.json()
         anime = data.get('data', {})
         
-        # Debug: Print score data
         if anime.get('score'):
             print(f"Score data: {anime['score']}")
             print(f"Score type: {type(anime['score'])}")
@@ -179,12 +179,10 @@ def anime_detail(anime_id):
 @app.route('/episode/<episode_id>')
 def episode_detail(episode_id):
     try:
-        # Ambil data episode
         response = requests.get(f"{API_BASE}/anime/samehadaku/episode/{episode_id}", headers=HEADERS, timeout=10)
         data = response.json()
         episode = data.get('data', {})
         
-        # ✨ PERBAIKAN: Ambil data anime lengkap untuk mendapatkan semua episode
         if episode and episode.get('animeId'):
             try:
                 anime_response = requests.get(
@@ -194,7 +192,6 @@ def episode_detail(episode_id):
                 )
                 anime_data = anime_response.json()
                 
-                # Jika berhasil ambil data anime, tambahkan episodeList lengkap
                 if anime_data.get('status') == 'success':
                     anime_info = anime_data.get('data', {})
                     if anime_info.get('episodeList'):
@@ -207,7 +204,6 @@ def episode_detail(episode_id):
                     
             except Exception as anime_error:
                 print(f"⚠️ Error fetching anime data: {str(anime_error)}")
-                # Tidak perlu error, tetap tampilkan halaman dengan recommendedEpisodeList
         
         return render_template('episode_detail.html', episode=episode)
         
@@ -227,5 +223,5 @@ def get_server_url(server_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Vercel serverless function handler
-app_handler = app
+if __name__ == '__main__':
+    app.run(debug=True)
