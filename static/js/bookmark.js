@@ -60,17 +60,20 @@
             return false;
         }
 
-        // Add new bookmark at the beginning
-        bookmarks.unshift({
+        // Add new bookmark at the beginning with complete data
+        const bookmarkData = {
             animeId: animeData.animeId,
             title: animeData.title || 'Unknown Title',
             poster: animeData.poster || '',
             score: animeData.score || '',
             type: animeData.type || '',
-            status: animeData.status || '',
+            status: animeData.status || '', // Make sure status is saved
             addedDate: Date.now()
-        });
-
+        };
+        
+        console.log('Saving bookmark with data:', bookmarkData); // Debug log
+        
+        bookmarks.unshift(bookmarkData);
         saveBookmarks(bookmarks);
         showNotification('Added to bookmarks', 'success');
         return true;
@@ -173,6 +176,9 @@
 
     // Create bookmark card element
     function createBookmarkCard(anime) {
+        // Debug log
+        console.log('Creating card for anime:', anime.title, 'Status:', anime.status);
+        
         // Create card wrapper (clickable link)
         const cardLink = document.createElement('a');
         cardLink.href = `/anime/${anime.animeId}`;
@@ -225,19 +231,22 @@
         
         poster.appendChild(img);
         
-        // Add badge
+        // Create badge container for status badge only
+        const badgeContainer = document.createElement('div');
+        badgeContainer.className = 'badge-container';
+        
+        // ONLY add status badge (if exists)
         if (anime.status) {
-            const badge = document.createElement('span');
-            badge.className = `badge ${getBadgeClass(anime.status)}`;
-            badge.textContent = anime.status;
-            poster.appendChild(badge);
+            const statusBadge = document.createElement('span');
+            statusBadge.className = `badge ${getBadgeClass(anime.status)}`;
+            statusBadge.textContent = anime.status;
+            badgeContainer.appendChild(statusBadge);
         }
         
-        // Add bookmark badge
-        const bookmarkBadge = document.createElement('span');
-        bookmarkBadge.className = 'bookmark-badge';
-        bookmarkBadge.textContent = '⭐ Bookmark';
-        poster.appendChild(bookmarkBadge);
+        // Only add container if it has badges
+        if (badgeContainer.children.length > 0) {
+            poster.appendChild(badgeContainer);
+        }
         
         // Info
         const info = document.createElement('div');
@@ -620,6 +629,82 @@
                     transform: translateX(100%);
                     opacity: 0;
                 }
+            }
+            
+            /* Badge Container - Vertical Layout with proper spacing */
+            .badge-container {
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                right: 8px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                z-index: 2;
+                align-items: flex-start;
+                pointer-events: none;
+            }
+            
+            /* All badges same style */
+            .badge {
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+                display: inline-block;
+                pointer-events: auto;
+            }
+            
+            /* Bookmark Badge */
+            .badge-bookmark {
+                background: linear-gradient(135deg, #ffd700, #ffb800);
+                color: #1a1f2e;
+            }
+            
+            /* Status Badges */
+            .badge-ongoing {
+                background: linear-gradient(135deg, #3498db, #2980b9);
+                color: white;
+            }
+            
+            .badge-completed {
+                background: linear-gradient(135deg, #2ecc71, #27ae60);
+                color: white;
+            }
+            
+            .badge-recent {
+                background: linear-gradient(135deg, #e74c3c, #c0392b);
+                color: white;
+            }
+            
+            /* Remove button positioning */
+            .remove-bookmark-btn {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                background: rgba(0, 0, 0, 0.7);
+                border: none;
+                color: white;
+                padding: 8px;
+                border-radius: 50%;
+                cursor: pointer;
+                z-index: 3;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(10px);
+                width: 32px;
+                height: 32px;
+            }
+            
+            .remove-bookmark-btn:hover {
+                background: var(--primary-color, #e74c3c);
+                transform: scale(1.1);
             }
             
             /* Custom Confirm Modal */
