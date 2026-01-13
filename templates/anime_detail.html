@@ -240,8 +240,8 @@
     const urlPath = window.location.pathname;
     const animeIdFromUrl = urlPath.split('/anime/')[1]?.split('?')[0]?.split('#')[0] || '';
     
-    // Get title - use japanese if title is empty
-    const animeTitle = {{ anime.title|tojson }} || {{ anime.japanese|tojson }} || {{ anime.english|tojson }} || 'Unknown Title';
+    // Get title - prioritize english then japanese if title is empty
+    const animeTitle = {{ anime.title|tojson }} || {{ anime.english|tojson }} || {{ anime.japanese|tojson }} || 'Unknown Title';
     
     // Prepare anime data for bookmark system
     window.animeData = {
