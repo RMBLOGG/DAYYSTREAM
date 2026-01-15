@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Jadwal Rilis Anime - DayyStream{% endblock %}
@@ -7,6 +8,11 @@
 <section class="section">
     <div class="section-header">
         <h2 class="section-title">📅 Jadwal Rilis Anime Mingguan</h2>
+        <div class="view-toggle">
+            <button class="view-toggle-btn" id="viewToggleBtn" title="Ganti Tampilan ke Compact">
+                <span class="toggle-icon"><i class="fas fa-th-large"></i></span>
+            </button>
+        </div>
     </div>
 
     {% if schedule_data and schedule_data.days %}
@@ -25,7 +31,9 @@
                     {% else %}{{ day_group.day }}
                     {% endif %}
                 </h3>
-                <div class="anime-grid">
+                
+                <!-- Grid View -->
+                <div class="anime-grid" data-view="grid">
                     {% for anime in day_group.animeList %}
                     <a href="/anime/{{ anime.animeId }}" class="card-link">
                         <div class="anime-card">
@@ -61,6 +69,72 @@
                     </a>
                     {% endfor %}
                 </div>
+                
+                <!-- Compact View -->
+                <div class="anime-compact" data-view="compact" style="display: none;">
+                    <div class="compact-table">
+                        <div class="compact-header">
+                            <div class="compact-col poster-col">Poster</div>
+                            <div class="compact-col title-col">Judul Anime</div>
+                            <div class="compact-col type-col">Tipe</div>
+                            <div class="compact-col time-col">Estimasi</div>
+                            <div class="compact-col score-col">Rating</div>
+                            <div class="compact-col genres-col">Genre</div>
+                            <div class="compact-col action-col">Aksi</div>
+                        </div>
+                        <div class="compact-body">
+                            {% for anime in day_group.animeList %}
+                            <a href="/anime/{{ anime.animeId }}" class="compact-row-link">
+                                <div class="compact-row">
+                                    <div class="compact-col poster-col">
+                                        <div class="compact-poster">
+                                            {% if anime.poster %}
+                                            <img src="{{ anime.poster }}" alt="{{ anime.title }}" loading="lazy">
+                                            {% else %}
+                                            <div class="compact-poster-placeholder">🎬</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="compact-col title-col">
+                                        <div class="compact-title">{{ anime.title }}</div>
+                                    </div>
+                                    <div class="compact-col type-col">
+                                        {% if anime.type %}
+                                        <span class="compact-type">{{ anime.type }}</span>
+                                        {% else %}
+                                        <span class="compact-empty">-</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="compact-col time-col">
+                                        {% if anime.estimation %}
+                                        <span class="compact-time">{{ anime.estimation }}</span>
+                                        {% else %}
+                                        <span class="compact-empty">-</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="compact-col score-col">
+                                        {% if anime.score %}
+                                        <span class="compact-score">⭐ {{ anime.score }}</span>
+                                        {% else %}
+                                        <span class="compact-empty">-</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="compact-col genres-col">
+                                        {% if anime.genres %}
+                                        <span class="compact-genres">{{ anime.genres }}</span>
+                                        {% else %}
+                                        <span class="compact-empty">-</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="compact-col action-col">
+                                        <span class="compact-action">Lihat →</span>
+                                    </div>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
             {% endif %}
         {% endfor %}
@@ -71,5 +145,88 @@
         </div>
     {% endif %}
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const viewToggleBtn = document.getElementById('viewToggleBtn');
+    const toggleIcon = viewToggleBtn.querySelector('.toggle-icon i');
+    const scheduleDays = document.querySelectorAll('.schedule-day');
+    
+    // Cek preferensi penyimpanan lokal
+    const savedView = localStorage.getItem('animeScheduleView') || 'grid';
+    let currentView = savedView;
+    
+    // Set tampilan awal berdasarkan preferensi
+    setActiveView(currentView);
+    updateToggleButton();
+    
+    // Event listener untuk toggle button
+    viewToggleBtn.addEventListener('click', function() {
+        // Toggle antara grid dan compact
+        if (currentView === 'grid') {
+            currentView = 'compact';
+        } else {
+            currentView = 'grid';
+        }
+        
+        // Update view
+        setActiveView(currentView);
+        updateToggleButton();
+        
+        // Simpan preferensi ke localStorage
+        localStorage.setItem('animeScheduleView', currentView);
+    });
+    
+    function setActiveView(viewType) {
+        scheduleDays.forEach(day => {
+            const gridView = day.querySelector('.anime-grid');
+            const compactView = day.querySelector('.anime-compact');
+            
+            if (viewType === 'grid') {
+                gridView.style.display = 'grid';
+                compactView.style.display = 'none';
+            } else {
+                gridView.style.display = 'none';
+                compactView.style.display = 'block';
+            }
+        });
+    }
+    
+    function updateToggleButton() {
+        if (currentView === 'grid') {
+            toggleIcon.className = 'fas fa-th-large';
+            viewToggleBtn.title = 'Ganti Tampilan ke Compact';
+        } else {
+            toggleIcon.className = 'fas fa-table';
+            viewToggleBtn.title = 'Ganti Tampilan ke Grid';
+        }
+    }
+});
+
+// Tambahkan animasi flip di JavaScript
+viewToggleBtn.addEventListener('click', function() {
+    // Tambahkan class untuk animasi
+    this.classList.add('flipping');
+    
+    setTimeout(() => {
+        // Toggle antara grid dan compact
+        if (currentView === 'grid') {
+            currentView = 'compact';
+        } else {
+            currentView = 'grid';
+        }
+        
+        // Update view
+        setActiveView(currentView);
+        updateToggleButton();
+        
+        // Simpan preferensi ke localStorage
+        localStorage.setItem('animeScheduleView', currentView);
+        
+        // Hapus class animasi
+        this.classList.remove('flipping');
+    }, 150);
+});
+</script>
 
 {% endblock %}
