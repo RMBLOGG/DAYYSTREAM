@@ -274,6 +274,10 @@ def batch_detail(batch_id):
 def bookmark():
     return render_template('bookmark.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/anime/<anime_id>')
 def anime_detail(anime_id):
     try:
