@@ -223,4 +223,31 @@
 </section>
 {% endif %}
 
+<!-- Pagination Controls -->
+{% if pagination %}
+<div class="pagination">
+    {% if pagination.hasPrevPage %}
+    <a href="/{{ current_route }}?page={{ pagination.prevPage }}" class="pagination-btn">
+        <span>← Sebelumnya</span>
+    </a>
+    {% else %}
+    <span class="pagination-btn disabled">← Sebelumnya</span>
+    {% endif %}
+    
+    <div class="pagination-info">
+        <span class="page-current">{{ pagination.currentPage }}</span>
+        <span class="page-divider">/</span>
+        <span class="page-total">{{ pagination.totalPages }}</span>
+    </div>
+    
+    {% if pagination.hasNextPage %}
+    <a href="/{{ current_route }}?page={{ pagination.nextPage }}" class="pagination-btn">
+        <span>Selanjutnya →</span>
+    </a>
+    {% else %}
+    <span class="pagination-btn disabled">Selanjutnya →</span>
+    {% endif %}
+</div>
+{% endif %}
+
 {% endblock %}
