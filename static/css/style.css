@@ -1230,6 +1230,139 @@ header {
     background: var(--accent-color);
 }
 
+/* ==========================================
+   EPISODE GRID - Matching style.css theme
+   ========================================== */
+
+.episode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px;
+    padding: 20px 0;
+}
+
+.episode-card {
+    background: var(--bg-card);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-decoration: none;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    min-height: 85px;
+}
+
+.episode-card:hover {
+    background: rgba(231, 76, 60, 0.1);
+    border-color: var(--primary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.episode-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.episode-number svg {
+    color: var(--primary-color);
+    width: 20px;
+    height: 20px;
+}
+
+.episode-number span {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.episode-info {
+    text-align: center;
+}
+
+.episode-date-small {
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .episode-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+    
+    .episode-card {
+        padding: 14px 10px;
+        min-height: 80px;
+    }
+    
+    .episode-number span {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .episode-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 10px;
+    }
+    
+    .episode-card {
+        padding: 12px 8px;
+        min-height: 75px;
+    }
+    
+    .episode-number svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .episode-number span {
+        font-size: 18px;
+    }
+    
+    .episode-date-small {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 480px) {
+    .episode-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+    
+    .episode-card {
+        padding: 10px 6px;
+        min-height: 70px;
+    }
+    
+    .episode-number svg {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .episode-number span {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .episode-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 /* Episode Dropdown Styles */
 .episode-header {
     cursor: pointer;
