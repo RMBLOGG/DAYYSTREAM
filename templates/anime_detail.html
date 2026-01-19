@@ -6,10 +6,8 @@
 
 {% if anime %}
 <div class="detail-wrapper-premium">
-    <!-- Hero Section with Backdrop -->
+    <!-- Hero Section -->
     <div class="hero-premium">
-        <div class="hero-backdrop" style="background-image: url('{{ anime.poster }}');"></div>
-        
         <div class="hero-container">
             <div class="hero-poster-wrapper">
                 <img src="{{ anime.poster }}" alt="{{ anime.title }}" class="hero-poster-img" loading="lazy">
@@ -29,12 +27,18 @@
                         {% if anime.status %}
                         <span class="meta-badge badge-status">{{ anime.status }}</span>
                         {% endif %}
+                        {% if anime.releaseDate %}
+                        <span class="meta-badge badge-date">📅 {{ anime.releaseDate }}</span>
+                        {% endif %}
                         {% if anime.get('score') %}
                         <span class="meta-badge badge-score">
                             ⭐ 
                             {% set score_val = anime.get('score') %}
                             {% if score_val is mapping and score_val.get('value') %}
                                 {{ score_val.get('value') }}
+                                {% if score_val.get('users') %}
+                                    <span style="font-size: 11px; opacity: 0.8; margin-left: 4px;">({{ score_val.get('users') }})</span>
+                                {% endif %}
                             {% else %}
                                 {{ score_val }}
                             {% endif %}
@@ -122,10 +126,33 @@
                     <div class="info-val">{{ anime.producers }}</div>
                 </div>
                 {% endif %}
+                {% if anime.releaseDate %}
+                <div class="info-row">
+                    <div class="info-key">Release Date</div>
+                    <div class="info-val">{{ anime.releaseDate }}</div>
+                </div>
+                {% endif %}
+                {% if anime.get('score') %}
+                <div class="info-row">
+                    <div class="info-key">Score</div>
+                    <div class="info-val">
+                        ⭐ 
+                        {% set score_val = anime.get('score') %}
+                        {% if score_val is mapping and score_val.get('value') %}
+                            {{ score_val.get('value') }}
+                        {% else %}
+                            {{ score_val }}
+                        {% endif %}
+                        {% if score_val is mapping and score_val.get('users') %}
+                            <span style="color: var(--text-secondary); font-size: 13px; margin-left: 8px;">({{ score_val.get('users') }} users)</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </section>
         
-        <!-- Episodes Section - HANYA FIXED URUTAN EPISODE -->
+        <!-- Episodes Section -->
         {% if anime.episodeList %}
         <section class="section-premium">
             <div class="section-header-premium" onclick="toggleEpisodeList()">
@@ -194,7 +221,7 @@
 </div>
 
 <style>
-/* Container & Background - OPTIMIZED */
+/* Container & Background */
 .detail-wrapper-premium {
     position: relative;
     min-height: 100vh;
@@ -203,7 +230,7 @@
     background: linear-gradient(180deg, rgba(231, 76, 60, 0.08) 0%, transparent 40%);
 }
 
-/* Hero Section - REDUCED BLUR */
+/* Hero Section */
 .hero-premium {
     position: relative;
     min-height: 60vh;
@@ -211,32 +238,6 @@
     align-items: center;
     overflow: hidden;
     margin-bottom: 60px;
-}
-
-.hero-backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-size: cover;
-    background-position: center;
-    filter: blur(20px) brightness(0.3); /* REDUCED dari 40px ke 20px */
-    transform: scale(1.05); /* REDUCED dari 1.1 */
-    opacity: 0.5; /* REDUCED dari 0.6 */
-}
-
-.hero-backdrop::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, 
-        rgba(15, 20, 25, 0.4) 0%,
-        rgba(15, 20, 25, 0.85) 50%,
-        rgba(15, 20, 25, 0.95) 100%);
 }
 
 .hero-container {
@@ -251,7 +252,7 @@
     align-items: center;
 }
 
-/* Poster - SIMPLIFIED GLOW */
+/* Poster */
 .hero-poster-wrapper {
     position: relative;
 }
@@ -264,8 +265,8 @@
     right: -10px;
     bottom: -10px;
     background: var(--primary-color);
-    filter: blur(20px); /* REDUCED dari 40px */
-    opacity: 0.2; /* REDUCED dari 0.3 */
+    filter: blur(20px);
+    opacity: 0.2;
     border-radius: 24px;
 }
 
@@ -273,13 +274,13 @@
     position: relative;
     width: 100%;
     border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* SIMPLIFIED shadow */
-    transition: transform 0.3s ease; /* FASTER transition */
-    will-change: transform; /* GPU acceleration */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+    will-change: transform;
 }
 
 .hero-poster-img:hover {
-    transform: translateY(-8px); /* REDUCED movement */
+    transform: translateY(-8px);
 }
 
 /* Hero Info */
@@ -298,7 +299,7 @@
     font-weight: 900;
     line-height: 1.2;
     margin: 0 0 15px 0;
-    color: #ffffff; /* SIMPLIFIED - removed gradient */
+    color: #ffffff;
 }
 
 .anime-subtitle-premium {
@@ -308,7 +309,7 @@
     font-weight: 500;
 }
 
-/* Meta Badges - SIMPLIFIED */
+/* Meta Badges */
 .meta-badges {
     display: flex;
     flex-wrap: wrap;
@@ -322,7 +323,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    background: rgba(255, 255, 255, 0.1); /* SIMPLIFIED */
+    background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -336,12 +337,17 @@
     border-color: rgba(46, 204, 113, 0.3);
 }
 
+.badge-date {
+    color: #9b59b6;
+    border-color: rgba(155, 89, 182, 0.3);
+}
+
 .badge-score {
     color: #f1c40f;
     border-color: rgba(241, 196, 15, 0.3);
 }
 
-/* Bookmark Button - SIMPLIFIED */
+/* Bookmark Button */
 .bookmark-premium {
     display: inline-flex;
     align-items: center;
@@ -354,14 +360,14 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
-    transition: all 0.3s ease; /* FASTER */
+    transition: all 0.3s ease;
     align-self: flex-start;
 }
 
 .bookmark-premium:hover {
     background: rgba(255, 215, 0, 0.15);
     border-color: #ffd700;
-    transform: translateY(-2px); /* REDUCED */
+    transform: translateY(-2px);
 }
 
 .bookmark-premium.bookmarked {
@@ -428,7 +434,7 @@
     position: absolute;
     bottom: -8px;
     left: 0;
-    width: 60px; /* FIXED width instead of 100% */
+    width: 60px;
     height: 3px;
     background: var(--primary-color);
 }
@@ -438,7 +444,7 @@
     font-weight: 600;
 }
 
-/* Genre Pills - SIMPLIFIED */
+/* Genre Pills */
 .genre-pills {
     display: flex;
     flex-wrap: wrap;
@@ -453,14 +459,14 @@
     font-size: 14px;
     font-weight: 600;
     color: var(--text-primary);
-    transition: all 0.2s ease; /* FASTER */
+    transition: all 0.2s ease;
     cursor: pointer;
 }
 
 .genre-pill:hover {
     background: rgba(231, 76, 60, 0.15);
     border-color: var(--primary-color);
-    transform: translateY(-2px); /* REDUCED */
+    transform: translateY(-2px);
 }
 
 /* Synopsis */
@@ -523,7 +529,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease; /* FASTER */
+    transition: all 0.2s ease;
 }
 
 .toggle-btn-premium:hover {
@@ -546,7 +552,7 @@
 .episode-wrapper-premium {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease; /* FASTER */
+    transition: max-height 0.4s ease;
 }
 
 .episode-wrapper-premium.open {
@@ -575,7 +581,7 @@
     padding: 10px 0;
 }
 
-/* Episode Box - OPTIMIZED */
+/* Episode Box */
 .episode-box {
     position: relative;
     aspect-ratio: 1;
@@ -587,14 +593,14 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    transition: all 0.3s ease; /* FASTER */
+    transition: all 0.3s ease;
     overflow: hidden;
-    will-change: transform; /* GPU acceleration */
+    will-change: transform;
 }
 
 .episode-box:hover {
     border-color: var(--primary-color);
-    transform: translateY(-5px) scale(1.03); /* REDUCED */
+    transform: translateY(-5px) scale(1.03);
     background: rgba(231, 76, 60, 0.1);
 }
 
@@ -605,7 +611,7 @@
     transform: translate(-50%, -50%);
     color: rgba(255, 255, 255, 0.3);
     opacity: 0;
-    transition: opacity 0.3s ease; /* FASTER */
+    transition: opacity 0.3s ease;
     z-index: 1;
 }
 
@@ -626,7 +632,7 @@
     position: relative;
     z-index: 2;
     margin-bottom: 5px;
-    transition: color 0.2s ease; /* FASTER */
+    transition: color 0.2s ease;
 }
 
 .episode-box:hover .ep-num {
@@ -642,7 +648,7 @@
     padding: 0 5px;
 }
 
-/* Download Section - SIMPLIFIED */
+/* Download Section */
 .download-group {
     margin-bottom: 40px;
 }
@@ -685,13 +691,13 @@
     text-decoration: none;
     font-weight: 700;
     font-size: 14px;
-    transition: all 0.3s ease; /* FASTER */
+    transition: all 0.3s ease;
 }
 
 .dl-btn-premium:hover {
     background: rgba(46, 204, 113, 0.2);
     border-color: #2ecc71;
-    transform: translateY(-2px); /* REDUCED */
+    transform: translateY(-2px);
 }
 
 /* Responsive */
@@ -734,6 +740,10 @@
     
     .anime-subtitle-premium {
         font-size: 16px;
+    }
+    
+    .meta-badges {
+        justify-content: center;
     }
     
     .bookmark-premium {
