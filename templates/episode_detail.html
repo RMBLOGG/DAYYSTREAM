@@ -175,77 +175,79 @@
         </section>
         {% endif %}
         
-        <!-- Episodes Section -->
-        {% if episode.fullEpisodeList %}
-        <section class="section-premium">
-            <div class="section-header-premium" onclick="toggleEpisodeList()">
-                <div class="section-label">All Episodes <span class="episode-count">({{ episode.fullEpisodeList|length }})</span></div>
-                <button class="toggle-btn-premium">
-                    <span class="toggle-icon-premium" id="episodeToggle">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </span>
-                </button>
-            </div>
-            
-            <div class="episode-wrapper-premium" id="episodeListWrapper">
-                <div class="episode-grid-premium">
-                    {% for ep in episode.fullEpisodeList|reverse %}
-                    <a href="/episode/{{ ep.episodeId }}" class="episode-box">
-                        <div class="ep-play-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
-                        </div>
-                        <div class="ep-num">{{ loop.revindex }}</div>
-                        {% if ep.releaseDate or ep.date %}
-                        <div class="ep-release">{{ ep.releaseDate if ep.releaseDate else ep.date }}</div>
-                        {% endif %}
-                    </a>
-                    {% endfor %}
+<!-- Replace the Episodes Section in episode_detail.html with this code -->
+
+<!-- Episodes Section -->
+{% if episode.fullEpisodeList %}
+<section class="section-premium">
+    <div class="section-header-premium" onclick="toggleEpisodeList()">
+        <div class="section-label">All Episodes <span class="episode-count">({{ episode.fullEpisodeList|length }})</span></div>
+        <button class="toggle-btn-premium">
+            <span class="toggle-icon-premium" id="episodeToggle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </span>
+        </button>
+    </div>
+    
+    <div class="episode-wrapper-premium" id="episodeListWrapper">
+        <div class="episode-grid-premium">
+            {% for ep in episode.fullEpisodeList|reverse %}
+            <a href="/episode/{{ ep.episodeId }}" class="episode-box">
+                <div class="ep-play-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
                 </div>
-            </div>
-        </section>
-        {% elif episode.recommendedEpisodeList %}
-        <section class="section-premium">
-            <div class="section-header-premium" onclick="toggleEpisodeList()">
-                <div class="section-label">Episodes <span class="episode-count">({{ episode.recommendedEpisodeList|length }})</span></div>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    {% if episode.animeId %}
-                    <a href="/anime/{{ episode.animeId }}" class="view-all-link">
-                        View All →
-                    </a>
-                    {% endif %}
-                    <button class="toggle-btn-premium">
-                        <span class="toggle-icon-premium" id="episodeToggle">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="6 9 12 15 18 9"></polyline>
-                            </svg>
-                        </span>
-                    </button>
+                <div class="ep-num">{{ loop.index }}</div>
+                {% if ep.releaseDate or ep.date %}
+                <div class="ep-release">{{ ep.releaseDate if ep.releaseDate else ep.date }}</div>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% elif episode.recommendedEpisodeList %}
+<section class="section-premium">
+    <div class="section-header-premium" onclick="toggleEpisodeList()">
+        <div class="section-label">Episodes <span class="episode-count">({{ episode.recommendedEpisodeList|length }})</span></div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            {% if episode.animeId %}
+            <a href="/anime/{{ episode.animeId }}" class="view-all-link">
+                View All →
+            </a>
+            {% endif %}
+            <button class="toggle-btn-premium">
+                <span class="toggle-icon-premium" id="episodeToggle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="episode-wrapper-premium" id="episodeListWrapper">
+        <div class="episode-grid-premium">
+            {% for ep in episode.recommendedEpisodeList|reverse %}
+            <a href="/episode/{{ ep.episodeId }}" class="episode-box">
+                <div class="ep-play-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
                 </div>
-            </div>
-            
-            <div class="episode-wrapper-premium" id="episodeListWrapper">
-                <div class="episode-grid-premium">
-                    {% for ep in episode.recommendedEpisodeList|reverse %}
-                    <a href="/episode/{{ ep.episodeId }}" class="episode-box">
-                        <div class="ep-play-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
-                        </div>
-                        <div class="ep-num">{{ loop.revindex }}</div>
-                        {% if ep.releaseDate %}
-                        <div class="ep-release">{{ ep.releaseDate }}</div>
-                        {% endif %}
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
-        </section>
-        {% endif %}
+                <div class="ep-num">{{ loop.index }}</div>
+                {% if ep.releaseDate %}
+                <div class="ep-release">{{ ep.releaseDate }}</div>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
         
         <!-- Download Section -->
         {% if episode.downloadUrl and episode.downloadUrl.formats %}

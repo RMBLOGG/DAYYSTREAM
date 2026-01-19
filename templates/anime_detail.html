@@ -125,7 +125,7 @@
             </div>
         </section>
         
-        <!-- Episodes Section -->
+        <!-- Episodes Section - HANYA FIXED URUTAN EPISODE -->
         {% if anime.episodeList %}
         <section class="section-premium">
             <div class="section-header-premium" onclick="toggleEpisodeList()">
@@ -148,7 +148,7 @@
                                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
                             </svg>
                         </div>
-                        <div class="ep-num">{{ loop.revindex }}</div>
+                        <div class="ep-num">{{ loop.index }}</div>
                         {% if episode.releaseDate or episode.date %}
                         <div class="ep-release">{{ episode.releaseDate if episode.releaseDate else episode.date }}</div>
                         {% endif %}
