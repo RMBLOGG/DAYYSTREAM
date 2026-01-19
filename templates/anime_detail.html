@@ -5,168 +5,180 @@
 {% block content %}
 
 {% if anime %}
-<div class="detail-container">
-    <div class="detail-header">
-        <div class="detail-poster">
-            <img src="{{ anime.poster }}" alt="{{ anime.title }}">
-        </div>
+<div class="detail-wrapper-premium">
+    <!-- Hero Section with Backdrop -->
+    <div class="hero-premium">
+        <div class="hero-backdrop" style="background-image: url('{{ anime.poster }}');"></div>
         
-        <div class="detail-content">
-            <div style="display: flex; justify-content: space-between; align-items: start; gap: 20px; margin-bottom: 20px;">
-                <h2 style="margin: 0;">{{ anime.title }}</h2>
-                <button id="bookmarkBtn" class="bookmark-btn">
-                    <svg id="bookmarkIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    <span id="bookmarkText">Bookmark</span>
-                </button>
+        <div class="hero-container">
+            <div class="hero-poster-wrapper">
+                <img src="{{ anime.poster }}" alt="{{ anime.title }}" class="hero-poster-img" loading="lazy">
             </div>
             
-            <div class="detail-info">
-                {% if anime.japanese %}
-                <div class="info-item">
-                    <div class="info-label">🇯🇵 Japanese Title</div>
-                    <div class="info-value">{{ anime.japanese }}</div>
-                </div>
-                {% endif %}
-                
-                {% if anime.get('score') %}
-                <div class="info-item">
-                    <div class="info-label">⭐ Score</div>
-                    <div class="info-value">
-                        {% set score_val = anime.get('score') %}
-                        {% if score_val is mapping and score_val.get('value') %}
-                            {{ score_val.get('value') }}
-                            {% if score_val.get('users') %}
-                                <span style="font-size: 11px; color: var(--text-secondary);">({{ score_val.get('users') }} users)</span>
+            <div class="hero-info">
+                <div class="title-section">
+                    <h1 class="anime-title-premium">{{ anime.title }}</h1>
+                    {% if anime.japanese %}
+                    <p class="anime-subtitle-premium">{{ anime.japanese }}</p>
+                    {% endif %}
+                    
+                    <div class="meta-badges">
+                        {% if anime.type %}
+                        <span class="meta-badge badge-type">{{ anime.type }}</span>
+                        {% endif %}
+                        {% if anime.status %}
+                        <span class="meta-badge badge-status">{{ anime.status }}</span>
+                        {% endif %}
+                        {% if anime.get('score') %}
+                        <span class="meta-badge badge-score">
+                            ⭐ 
+                            {% set score_val = anime.get('score') %}
+                            {% if score_val is mapping and score_val.get('value') %}
+                                {{ score_val.get('value') }}
+                            {% else %}
+                                {{ score_val }}
                             {% endif %}
-                        {% else %}
-                            {{ score_val }}
+                        </span>
                         {% endif %}
                     </div>
                 </div>
-                {% endif %}
                 
-                {% if anime.type %}
-                <div class="info-item">
-                    <div class="info-label">📺 Type</div>
-                    <div class="info-value">{{ anime.type }}</div>
-                </div>
-                {% endif %}
+                <button id="bookmarkBtn" class="bookmark-premium">
+                    <svg id="bookmarkIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span id="bookmarkText">Add to Bookmark</span>
+                </button>
                 
-                {% if anime.status %}
-                <div class="info-item">
-                    <div class="info-label">📊 Status</div>
-                    <div class="info-value">{{ anime.status }}</div>
-                </div>
-                {% endif %}
-                
-                {% if anime.totalEpisodes %}
-                <div class="info-item">
-                    <div class="info-label">🎬 Total Episodes</div>
-                    <div class="info-value">{{ anime.totalEpisodes }}</div>
-                </div>
-                {% endif %}
-                
-                {% if anime.duration %}
-                <div class="info-item">
-                    <div class="info-label">⏱️ Duration</div>
-                    <div class="info-value">{{ anime.duration }}</div>
-                </div>
-                {% endif %}
-                
-                {% if anime.releaseDate %}
-                <div class="info-item">
-                    <div class="info-label">📅 Release Date</div>
-                    <div class="info-value">{{ anime.releaseDate }}</div>
-                </div>
-                {% endif %}
-                
-                {% if anime.studios %}
-                <div class="info-item">
-                    <div class="info-label">🏢 Studios</div>
-                    <div class="info-value">{{ anime.studios }}</div>
-                </div>
-                {% endif %}
-                
-                {% if anime.producers %}
-                <div class="info-item">
-                    <div class="info-label">🏭 Producers</div>
-                    <div class="info-value">{{ anime.producers }}</div>
-                </div>
-                {% endif %}
-                
-                {% if anime.genreList %}
-                <div class="info-item" style="grid-column: 1 / -1;">
-                    <div class="info-label">🎭 Genres</div>
-                    <div class="info-value">
-                        {{ anime.genreList|map(attribute='title')|join(', ') }}
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    {% if anime.totalEpisodes %}
+                    <div class="stat-item">
+                        <div class="stat-value">{{ anime.totalEpisodes }}</div>
+                        <div class="stat-label">Episodes</div>
                     </div>
+                    {% endif %}
+                    {% if anime.duration %}
+                    <div class="stat-item">
+                        <div class="stat-value">{{ anime.duration }}</div>
+                        <div class="stat-label">Duration</div>
+                    </div>
+                    {% endif %}
+                    {% if anime.releaseDate %}
+                    <div class="stat-item">
+                        <div class="stat-value">{{ anime.releaseDate }}</div>
+                        <div class="stat-label">Released</div>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
-            
-            {% if anime.synopsis %}
-            <div class="synopsis-box">
-                <strong>📝 Synopsis</strong>
+        </div>
+    </div>
+    
+    <!-- Content Container -->
+    <div class="content-premium">
+        
+        <!-- Genres Section -->
+        {% if anime.genreList %}
+        <section class="section-premium">
+            <div class="section-label">Genres</div>
+            <div class="genre-pills">
+                {% for genre in anime.genreList %}
+                <span class="genre-pill">{{ genre.title }}</span>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        
+        <!-- Synopsis Section -->
+        {% if anime.synopsis %}
+        <section class="section-premium">
+            <div class="section-label">Synopsis</div>
+            <div class="synopsis-premium">
                 {% if anime.synopsis.paragraphs %}
                     {% for paragraph in anime.synopsis.paragraphs %}
-                    <p style="margin-bottom: 10px;">{{ paragraph }}</p>
+                    <p>{{ paragraph }}</p>
                     {% endfor %}
                 {% else %}
                     <p>{{ anime.synopsis }}</p>
                 {% endif %}
             </div>
-            {% endif %}
-        </div>
-    </div>
-    
-    {% if anime.episodeList %}
-    <section class="section">
-        <div class="section-header episode-header" onclick="toggleEpisodeList()">
-            <h2 class="section-title">Episodes ({{ anime.episodeList|length }})</h2>
-            <span class="episode-toggle" id="episodeToggle">▼</span>
-        </div>
+        </section>
+        {% endif %}
         
-        <div class="episode-list-wrapper" id="episodeListWrapper">
-            <div class="episode-grid">
-                {% for episode in anime.episodeList|reverse %}
-                <a href="/episode/{{ episode.episodeId }}" class="episode-card">
-                    <div class="episode-number">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                        <span>{{ loop.revindex }}</span>
-                    </div>
-                    <div class="episode-info">
-                        <div class="episode-date-small">
-                            {{ episode.releaseDate if episode.releaseDate else (episode.date if episode.date else '') }}
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
+        <!-- Additional Info -->
+        <section class="section-premium">
+            <div class="section-label">Information</div>
+            <div class="info-table">
+                {% if anime.studios %}
+                <div class="info-row">
+                    <div class="info-key">Studio</div>
+                    <div class="info-val">{{ anime.studios }}</div>
+                </div>
+                {% endif %}
+                {% if anime.producers %}
+                <div class="info-row">
+                    <div class="info-key">Producer</div>
+                    <div class="info-val">{{ anime.producers }}</div>
+                </div>
+                {% endif %}
             </div>
-        </div>
-    </section>
-    {% endif %}
-    
-    {% if is_batch and anime.downloadUrl and anime.downloadUrl.formats %}
-    <section class="section">
-        <div class="download-section">
-            <div class="section-header" style="border: none; padding-bottom: 0;">
-                <h2 class="section-title">Download Batch</h2>
+        </section>
+        
+        <!-- Episodes Section -->
+        {% if anime.episodeList %}
+        <section class="section-premium">
+            <div class="section-header-premium" onclick="toggleEpisodeList()">
+                <div class="section-label">Episodes <span class="episode-count">({{ anime.episodeList|length }})</span></div>
+                <button class="toggle-btn-premium">
+                    <span class="toggle-icon-premium" id="episodeToggle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </span>
+                </button>
             </div>
             
+            <div class="episode-wrapper-premium" id="episodeListWrapper">
+                <div class="episode-grid-premium">
+                    {% for episode in anime.episodeList|reverse %}
+                    <a href="/episode/{{ episode.episodeId }}" class="episode-box">
+                        <div class="ep-play-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                        </div>
+                        <div class="ep-num">{{ loop.revindex }}</div>
+                        {% if episode.releaseDate or episode.date %}
+                        <div class="ep-release">{{ episode.releaseDate if episode.releaseDate else episode.date }}</div>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        
+        <!-- Download Batch -->
+        {% if is_batch and anime.downloadUrl and anime.downloadUrl.formats %}
+        <section class="section-premium">
+            <div class="section-label">Download Batch</div>
+            
             {% for format_group in anime.downloadUrl.formats %}
-            <div class="download-format">
-                <h3 class="format-title">{{ format_group.title }}</h3>
+            <div class="download-group">
+                <h4 class="download-format-title">{{ format_group.title }}</h4>
                 
                 {% for quality in format_group.qualities %}
-                <div class="quality-group">
-                    <div class="quality-title">{{ quality.title }}</div>
-                    <div class="download-links">
+                <div class="quality-block">
+                    <div class="quality-name">{{ quality.title }}</div>
+                    <div class="dl-buttons">
                         {% for url in quality.urls %}
-                        <a href="{{ url.url }}" target="_blank" class="download-btn">
+                        <a href="{{ url.url }}" target="_blank" class="dl-btn-premium">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
                             {{ url.title }}
                         </a>
                         {% endfor %}
@@ -175,83 +187,627 @@
                 {% endfor %}
             </div>
             {% endfor %}
-        </div>
-    </section>
-    {% endif %}
+        </section>
+        {% endif %}
+        
+    </div>
 </div>
 
 <style>
-.bookmark-btn {
+/* Container & Background - OPTIMIZED */
+.detail-wrapper-premium {
+    position: relative;
+    min-height: 100vh;
+    margin: -40px -20px 0;
+    padding: 0;
+    background: linear-gradient(180deg, rgba(231, 76, 60, 0.08) 0%, transparent 40%);
+}
+
+/* Hero Section - REDUCED BLUR */
+.hero-premium {
+    position: relative;
+    min-height: 60vh;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    background: rgba(255, 215, 0, 0.1);
-    border: 2px solid rgba(255, 215, 0, 0.3);
-    border-radius: 10px;
-    color: #ffd700;
-    font-weight: 600;
-    font-size: 14px;
+    overflow: hidden;
+    margin-bottom: 60px;
+}
+
+.hero-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px) brightness(0.3); /* REDUCED dari 40px ke 20px */
+    transform: scale(1.05); /* REDUCED dari 1.1 */
+    opacity: 0.5; /* REDUCED dari 0.6 */
+}
+
+.hero-backdrop::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, 
+        rgba(15, 20, 25, 0.4) 0%,
+        rgba(15, 20, 25, 0.85) 50%,
+        rgba(15, 20, 25, 0.95) 100%);
+}
+
+.hero-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 80px 40px 60px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+/* Poster - SIMPLIFIED GLOW */
+.hero-poster-wrapper {
+    position: relative;
+}
+
+.hero-poster-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: var(--primary-color);
+    filter: blur(20px); /* REDUCED dari 40px */
+    opacity: 0.2; /* REDUCED dari 0.3 */
+    border-radius: 24px;
+}
+
+.hero-poster-img {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* SIMPLIFIED shadow */
+    transition: transform 0.3s ease; /* FASTER transition */
+    will-change: transform; /* GPU acceleration */
+}
+
+.hero-poster-img:hover {
+    transform: translateY(-8px); /* REDUCED movement */
+}
+
+/* Hero Info */
+.hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.title-section {
+    margin-bottom: 10px;
+}
+
+.anime-title-premium {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.2;
+    margin: 0 0 15px 0;
+    color: #ffffff; /* SIMPLIFIED - removed gradient */
+}
+
+.anime-subtitle-premium {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 20px 0;
+    font-weight: 500;
+}
+
+/* Meta Badges - SIMPLIFIED */
+.meta-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.meta-badge {
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.1); /* SIMPLIFIED */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.badge-type {
+    color: #3498db;
+    border-color: rgba(52, 152, 219, 0.3);
+}
+
+.badge-status {
+    color: #2ecc71;
+    border-color: rgba(46, 204, 113, 0.3);
+}
+
+.badge-score {
+    color: #f1c40f;
+    border-color: rgba(241, 196, 15, 0.3);
+}
+
+/* Bookmark Button - SIMPLIFIED */
+.bookmark-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
+    transition: all 0.3s ease; /* FASTER */
+    align-self: flex-start;
 }
 
-.bookmark-btn:hover {
-    background: rgba(255, 215, 0, 0.2);
+.bookmark-premium:hover {
+    background: rgba(255, 215, 0, 0.15);
     border-color: #ffd700;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+    transform: translateY(-2px); /* REDUCED */
 }
 
-.bookmark-btn.bookmarked {
-    background: linear-gradient(135deg, #ffd700, #ffed4e);
+.bookmark-premium.bookmarked {
+    background: #ffd700;
     border-color: #ffd700;
     color: #1a1f2e;
 }
 
-.bookmark-btn.bookmarked svg {
+.bookmark-premium.bookmarked svg {
     fill: #1a1f2e;
 }
 
-.bookmark-btn svg {
-    transition: all 0.3s ease;
+/* Quick Stats */
+.quick-stats {
+    display: flex;
+    gap: 40px;
 }
 
-.bookmark-btn.bookmarked:hover {
-    background: linear-gradient(135deg, #ffed4e, #ffd700);
-    transform: scale(1.05);
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+/* Content Section */
+.content-premium {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.section-premium {
+    margin-bottom: 40px;
+}
+
+.section-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+}
+
+.section-label::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px; /* FIXED width instead of 100% */
+    height: 3px;
+    background: var(--primary-color);
+}
+
+.episode-count {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Genre Pills - SIMPLIFIED */
+.genre-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.genre-pill {
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: all 0.2s ease; /* FASTER */
+    cursor: pointer;
+}
+
+.genre-pill:hover {
+    background: rgba(231, 76, 60, 0.15);
+    border-color: var(--primary-color);
+    transform: translateY(-2px); /* REDUCED */
+}
+
+/* Synopsis */
+.synopsis-premium {
+    font-size: 16px;
+    line-height: 2;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 900px;
+}
+
+.synopsis-premium p {
+    margin-bottom: 20px;
+}
+
+/* Info Table */
+.info-table {
+    display: grid;
+    gap: 15px;
+    max-width: 600px;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-key {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+}
+
+.info-val {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Episodes Section */
+.section-header-premium {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.toggle-btn-premium {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease; /* FASTER */
+}
+
+.toggle-btn-premium:hover {
+    background: rgba(231, 76, 60, 0.15);
+    border-color: var(--primary-color);
+}
+
+.toggle-icon-premium {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: transform 0.3s ease;
+}
+
+.toggle-icon-premium.open {
+    transform: rotate(180deg);
+}
+
+.episode-wrapper-premium {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease; /* FASTER */
+}
+
+.episode-wrapper-premium.open {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.episode-wrapper-premium::-webkit-scrollbar {
+    width: 8px;
+}
+
+.episode-wrapper-premium::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.episode-wrapper-premium::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.episode-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 10px;
+    padding: 10px 0;
+}
+
+/* Episode Box - OPTIMIZED */
+.episode-box {
+    position: relative;
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease; /* FASTER */
+    overflow: hidden;
+    will-change: transform; /* GPU acceleration */
+}
+
+.episode-box:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-5px) scale(1.03); /* REDUCED */
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.ep-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease; /* FASTER */
+    z-index: 1;
+}
+
+.ep-play-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.episode-box:hover .ep-play-icon {
+    opacity: 1;
+    color: var(--primary-color);
+}
+
+.ep-num {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text-primary);
+    position: relative;
+    z-index: 2;
+    margin-bottom: 5px;
+    transition: color 0.2s ease; /* FASTER */
+}
+
+.episode-box:hover .ep-num {
+    color: var(--primary-color);
+}
+
+.ep-release {
+    font-size: 9px;
+    color: var(--text-secondary);
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 5px;
+}
+
+/* Download Section - SIMPLIFIED */
+.download-group {
+    margin-bottom: 40px;
+}
+
+.download-format-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 25px;
+}
+
+.quality-block {
+    margin-bottom: 25px;
+}
+
+.quality-name {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.dl-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.dl-btn-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: rgba(46, 204, 113, 0.1);
+    border: 2px solid rgba(46, 204, 113, 0.3);
+    border-radius: 12px;
+    color: #2ecc71;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease; /* FASTER */
+}
+
+.dl-btn-premium:hover {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: #2ecc71;
+    transform: translateY(-2px); /* REDUCED */
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .hero-container {
+        grid-template-columns: 280px 1fr;
+        gap: 40px;
+        padding: 60px 30px 40px;
+    }
+    
+    .anime-title-premium {
+        font-size: 36px;
+    }
+    
+    .content-premium {
+        padding: 0 30px 30px;
+    }
 }
 
 @media (max-width: 768px) {
-    .detail-content > div:first-child {
-        flex-direction: column;
-        align-items: start !important;
+    .detail-wrapper-premium {
+        margin: -20px -15px 0;
     }
     
-    .bookmark-btn {
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 40px 20px;
+        text-align: center;
+    }
+    
+    .hero-poster-wrapper {
+        max-width: 280px;
+        margin: 0 auto;
+    }
+    
+    .anime-title-premium {
+        font-size: 28px;
+    }
+    
+    .anime-subtitle-premium {
+        font-size: 16px;
+    }
+    
+    .bookmark-premium {
+        align-self: center;
         width: 100%;
         justify-content: center;
+    }
+    
+    .quick-stats {
+        justify-content: center;
+    }
+    
+    .content-premium {
+        padding: 0 20px 20px;
+    }
+    
+    .episode-grid-premium {
+        grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+        gap: 10px;
+    }
+    
+    .ep-num {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .anime-title-premium {
+        font-size: 24px;
+    }
+    
+    .quick-stats {
+        gap: 20px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+    
+    .episode-grid-premium {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+    }
+    
+    .ep-num {
+        font-size: 18px;
+    }
+    
+    .ep-release {
+        font-size: 8px;
+    }
+}
+
+/* Performance Optimizations */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 </style>
 
 <script>
-// Toggle Episode List Function
+// Toggle Episodes
 function toggleEpisodeList() {
     const wrapper = document.getElementById('episodeListWrapper');
     const toggle = document.getElementById('episodeToggle');
     
-    if (wrapper.classList.contains('open')) {
-        wrapper.classList.remove('open');
-        toggle.classList.remove('open');
-    } else {
-        wrapper.classList.add('open');
-        toggle.classList.add('open');
-    }
+    wrapper.classList.toggle('open');
+    toggle.classList.toggle('open');
 }
 
-// Auto open on page load
+// Auto open episodes
 document.addEventListener('DOMContentLoaded', function() {
     const wrapper = document.getElementById('episodeListWrapper');
     const toggle = document.getElementById('episodeToggle');
@@ -261,15 +817,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Parse anime data safely - Extract animeId from URL since API doesn't provide it
+// Anime data for bookmark
 (function() {
     const urlPath = window.location.pathname;
     const animeIdFromUrl = urlPath.split('/anime/')[1]?.split('?')[0]?.split('#')[0] || '';
     
-    // Get title - prioritize english then japanese if title is empty
     const animeTitle = {{ anime.title|tojson }} || {{ anime.english|tojson }} || {{ anime.japanese|tojson }} || 'Unknown Title';
     
-    // Prepare anime data for bookmark system
     window.animeData = {
         animeId: animeIdFromUrl,
         title: animeTitle,
@@ -283,8 +837,6 @@ document.addEventListener('DOMContentLoaded', function() {
         type: {{ (anime.type if anime.type else '')|tojson }},
         status: {{ (anime.status if anime.status else '')|tojson }}
     };
-    
-    console.log('Anime Data:', window.animeData);
 })();
 </script>
 
