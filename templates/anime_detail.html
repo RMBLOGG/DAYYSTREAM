@@ -124,7 +124,7 @@
     {% if anime.episodeList %}
     <section class="section">
         <div class="section-header episode-header" onclick="toggleEpisodeList()">
-            <h2 class="section-title">📺 Episodes ({{ anime.episodeList|length }})</h2>
+            <h2 class="section-title">Episodes ({{ anime.episodeList|length }})</h2>
             <span class="episode-toggle" id="episodeToggle">▼</span>
         </div>
         
@@ -154,7 +154,7 @@
     <section class="section">
         <div class="download-section">
             <div class="section-header" style="border: none; padding-bottom: 0;">
-                <h2 class="section-title">⬇️ Download Batch</h2>
+                <h2 class="section-title">Download Batch</h2>
             </div>
             
             {% for format_group in anime.downloadUrl.formats %}

@@ -90,14 +90,14 @@
                 </a>
             </div> -->
             {% endif %}
-            <h2 class="section-title">🎬 {{ episode.title }}</h2>
+            <h2 class="section-title">{{ episode.title }}</h2>
         </div>
         
         {% if episode.server and episode.server.qualities %}
         <div class="player-controls">
             <div style="background: rgba(52, 152, 219, 0.1); border-left: 3px solid var(--accent-color); padding: 12px 15px; border-radius: 8px; margin-bottom: 15px;">
                 <p style="margin: 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                    <strong style="color: var(--accent-color);">Info:</strong> Jika video tidak dapat diputar atau error, silakan coba <strong>kualitas lain</strong> atau <strong>server lain</strong> yang tersedia di bawah.
+                    ℹ️ <strong style="color: var(--accent-color);">Info:</strong> Jika video tidak dapat diputar atau error, silakan coba <strong>kualitas lain</strong> atau <strong>server lain</strong> yang tersedia di bawah.
                 </p>
             </div>
             
@@ -210,23 +210,25 @@
     {% if episode.fullEpisodeList %}
     <section class="section">
         <div class="section-header episode-header" onclick="toggleEpisodeList()">
-            <h2 class="section-title">📺 Daftar Episode</h2>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span style="color: var(--text-secondary);">{{ episode.fullEpisodeList|length }} Episode</span>
-                <span class="episode-toggle" id="episodeToggle">▼</span>
-            </div>
+            <h2 class="section-title">Daftar Episode ({{ episode.fullEpisodeList|length }})</h2>
+            <span class="episode-toggle" id="episodeToggle">▼</span>
         </div>
         
         <div class="episode-list-wrapper" id="episodeListWrapper">
-            <div class="episode-list">
-                {% for ep in episode.fullEpisodeList %}
-                <a href="/episode/{{ ep.episodeId }}" class="episode-item">
-                    <span class="episode-title">
-                        {{ ep.title if ep.title else ep.episodeId }}
-                    </span>
-                    <span class="episode-date">
-                        {{ ep.releaseDate if ep.releaseDate else (ep.date if ep.date else '') }}
-                    </span>
+            <div class="episode-grid">
+                {% for ep in episode.fullEpisodeList|reverse %}
+                <a href="/episode/{{ ep.episodeId }}" class="episode-card">
+                    <div class="episode-number">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <span>{{ loop.revindex }}</span>
+                    </div>
+                    <div class="episode-info">
+                        <div class="episode-date-small">
+                            {{ ep.releaseDate if ep.releaseDate else (ep.date if ep.date else '') }}
+                        </div>
+                    </div>
                 </a>
                 {% endfor %}
             </div>
@@ -235,9 +237,8 @@
     {% elif episode.recommendedEpisodeList %}
     <section class="section">
         <div class="section-header episode-header" onclick="toggleEpisodeList()">
-            <h2 class="section-title">📺 Daftar Episode</h2>
+            <h2 class="section-title">Daftar Episode ({{ episode.recommendedEpisodeList|length }})</h2>
             <div style="display: flex; align-items: center; gap: 15px;">
-                <span style="color: var(--text-secondary);">{{ episode.recommendedEpisodeList|length }} Episode</span>
                 {% if episode.animeId %}
                 <a href="/anime/{{ episode.animeId }}" 
                    style="color: var(--accent-color); text-decoration: none; font-size: 14px; font-weight: 600;">
@@ -249,15 +250,20 @@
         </div>
         
         <div class="episode-list-wrapper" id="episodeListWrapper">
-            <div class="episode-list">
-                {% for ep in episode.recommendedEpisodeList %}
-                <a href="/episode/{{ ep.episodeId }}" class="episode-item">
-                    <span class="episode-title">
-                        {{ ep.title if ep.title else ep.episodeId }}
-                    </span>
-                    <span class="episode-date">
-                        {{ ep.releaseDate if ep.releaseDate else '' }}
-                    </span>
+            <div class="episode-grid">
+                {% for ep in episode.recommendedEpisodeList|reverse %}
+                <a href="/episode/{{ ep.episodeId }}" class="episode-card">
+                    <div class="episode-number">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <span>{{ loop.revindex }}</span>
+                    </div>
+                    <div class="episode-info">
+                        <div class="episode-date-small">
+                            {{ ep.releaseDate if ep.releaseDate else '' }}
+                        </div>
+                    </div>
                 </a>
                 {% endfor %}
             </div>
@@ -269,7 +275,7 @@
     <section class="section">
         <div class="download-section">
             <div class="section-header" style="border: none; padding-bottom: 0;">
-                <h2 class="section-title">⬇️ Download Episode</h2>
+                <h2 class="section-title">Download Episode</h2>
             </div>
             
             {% for format_group in episode.downloadUrl.formats %}
@@ -316,6 +322,16 @@ function toggleEpisodeList() {
         toggle.classList.toggle('open');
     }
 }
+
+// Auto open on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const wrapper = document.getElementById('episodeListWrapper');
+    const toggle = document.getElementById('episodeToggle');
+    if (wrapper && toggle) {
+        wrapper.classList.add('open');
+        toggle.classList.add('open');
+    }
+});
 
 function showQuality(quality) {
     // Remove active class from all tabs
