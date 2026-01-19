@@ -124,23 +124,25 @@
     {% if anime.episodeList %}
     <section class="section">
         <div class="section-header episode-header" onclick="toggleEpisodeList()">
-            <h2 class="section-title">📺 Daftar Episode</h2>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <span style="color: var(--text-secondary);">{{ anime.episodeList|length }} Episode</span>
-                <span class="episode-toggle" id="episodeToggle">▼</span>
-            </div>
+            <h2 class="section-title">📺 Episodes ({{ anime.episodeList|length }})</h2>
+            <span class="episode-toggle" id="episodeToggle">▼</span>
         </div>
         
         <div class="episode-list-wrapper" id="episodeListWrapper">
-            <div class="episode-list">
+            <div class="episode-grid">
                 {% for episode in anime.episodeList|reverse %}
-                <a href="/episode/{{ episode.episodeId }}" class="episode-item">
-                    <span class="episode-title">
-                        {{ episode.title if episode.title else episode.episodeId }}
-                    </span>
-                    <span class="episode-date">
-                        {{ episode.releaseDate if episode.releaseDate else (episode.date if episode.date else '') }}
-                    </span>
+                <a href="/episode/{{ episode.episodeId }}" class="episode-card">
+                    <div class="episode-number">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <span>{{ loop.revindex }}</span>
+                    </div>
+                    <div class="episode-info">
+                        <div class="episode-date-small">
+                            {{ episode.releaseDate if episode.releaseDate else (episode.date if episode.date else '') }}
+                        </div>
+                    </div>
                 </a>
                 {% endfor %}
             </div>
@@ -235,6 +237,30 @@
 </style>
 
 <script>
+// Toggle Episode List Function
+function toggleEpisodeList() {
+    const wrapper = document.getElementById('episodeListWrapper');
+    const toggle = document.getElementById('episodeToggle');
+    
+    if (wrapper.classList.contains('open')) {
+        wrapper.classList.remove('open');
+        toggle.classList.remove('open');
+    } else {
+        wrapper.classList.add('open');
+        toggle.classList.add('open');
+    }
+}
+
+// Auto open on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const wrapper = document.getElementById('episodeListWrapper');
+    const toggle = document.getElementById('episodeToggle');
+    if (wrapper && toggle) {
+        wrapper.classList.add('open');
+        toggle.classList.add('open');
+    }
+});
+
 // Parse anime data safely - Extract animeId from URL since API doesn't provide it
 (function() {
     const urlPath = window.location.pathname;
@@ -272,15 +298,4 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-function toggleEpisodeList() {
-    const wrapper = document.getElementById('episodeListWrapper');
-    const toggle = document.getElementById('episodeToggle');
-    
-    if (wrapper && toggle) {
-        wrapper.classList.toggle('open');
-        toggle.classList.toggle('open');
-    }
-}
-</script>
 {% endblock %}
