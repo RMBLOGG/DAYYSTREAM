@@ -20,7 +20,7 @@
             </div>
             <div class="stat-item">
                 <i class="fas fa-users"></i>
-                <div class="stat-value">100K+</div>
+                <div class="stat-value">500K+</div>
                 <div class="stat-label">Pengguna</div>
             </div>
             <div class="stat-item">
@@ -338,11 +338,6 @@
                     <span class="skill-badge"><i class="fas fa-server"></i> Backend</span>
                     <span class="skill-badge"><i class="fas fa-mobile-alt"></i> UI/UX</span>
                 </div>
-                <!-- <div class="creator-quote">
-                    <i class="fas fa-quote-left quote-icon"></i>
-                    <p>"Anime bukan hanya hiburan, tetapi juga inspirasi dan pembelajaran. Saya berharap DAYYSTREAM dapat menjadi jembatan 
-                    bagi para pecinta anime untuk menikmati karya-karya terbaik dari Jepang dengan mudah dan nyaman."</p>
-                </div> -->
                 
                 <!-- Portfolio Websites -->
                 <div class="creator-portfolio">
@@ -369,26 +364,6 @@
                                 <span class="portfolio-link"><i class="fas fa-external-link-alt"></i> Kunjungi Website</span>
                             </div>
                         </a>
-<!--                         <a href="https://otakuzone.id" target="_blank" rel="noopener noreferrer" class="portfolio-item">
-                            <div class="portfolio-icon">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="portfolio-info">
-                                <h5>Otaku Zone</h5>
-                                <p>Komunitas dan forum diskusi anime Indonesia</p>
-                                <span class="portfolio-link"><i class="fas fa-external-link-alt"></i> Kunjungi Website</span>
-                            </div>
-                        </a>
-                        <a href="https://mangareader.id" target="_blank" rel="noopener noreferrer" class="portfolio-item">
-                            <div class="portfolio-icon">
-                                <i class="fas fa-book-open"></i>
-                            </div>
-                            <div class="portfolio-info">
-                                <h5>Manga Reader</h5>
-                                <p>Platform baca manga online bahasa Indonesia</p>
-                                <span class="portfolio-link"><i class="fas fa-external-link-alt"></i> Kunjungi Website</span>
-                            </div>
-                        </a> -->
                     </div>
                 </div>
             </div>
@@ -547,54 +522,84 @@
     font-weight: 700;
 }
 
-/* Features Grid */
+/* Features Grid - 2 COLUMNS - IMPROVED */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
 }
 
 .feature-item {
     text-align: center;
-    padding: 40px 30px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 40px 28px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+    border: 2px solid rgba(255, 255, 255, 0.12);
     border-radius: 20px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.08), rgba(33, 150, 243, 0.08));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.feature-item:hover::before {
+    opacity: 1;
 }
 
 .feature-item:hover {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(33, 150, 243, 0.15));
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(33, 150, 243, 0.12));
     border-color: rgba(76, 175, 80, 0.5);
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(76, 175, 80, 0.2);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(76, 175, 80, 0.25), 0 0 0 1px rgba(76, 175, 80, 0.1);
 }
 
 .feature-icon {
-    font-size: 56px;
+    font-size: 52px;
     margin-bottom: 20px;
     color: #4CAF50;
+    position: relative;
+    z-index: 1;
 }
 
 .feature-icon i {
-    filter: drop-shadow(0 0 15px rgba(76, 175, 80, 0.5));
+    filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.6));
+    transition: transform 0.4s ease;
+}
+
+.feature-item:hover .feature-icon i {
+    transform: scale(1.1);
 }
 
 .feature-item h3 {
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 700;
     margin-bottom: 12px;
     color: #fff;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.3px;
 }
 
 .feature-item p {
-    font-size: 15px;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
     line-height: 1.6;
     margin: 0;
+    position: relative;
+    z-index: 1;
 }
 
-/* Technology Section */
+/* Technology Section - 2 COLUMNS */
 .tech-intro {
     font-size: 16px;
     color: rgba(255, 255, 255, 0.7);
@@ -603,18 +608,18 @@
 
 .tech-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
 .tech-item {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding: 28px;
+    gap: 16px;
+    padding: 24px 20px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    border-radius: 14px;
     transition: all 0.3s ease;
 }
 
@@ -626,44 +631,45 @@
 
 .tech-icon {
     flex-shrink: 0;
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, rgba(33, 150, 243, 0.2), rgba(76, 175, 80, 0.2));
-    border-radius: 14px;
-    font-size: 32px;
+    border-radius: 12px;
+    font-size: 28px;
     color: #2196F3;
 }
 
 .tech-content h3 {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
     color: #fff;
 }
 
 .tech-content p {
-    font-size: 14px;
+    font-size: 13px;
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
+    line-height: 1.4;
 }
 
-/* Why Grid */
+/* Why Grid - 2 COLUMNS */
 .why-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    gap: 20px;
 }
 
 .why-item {
     display: flex;
-    gap: 24px;
-    padding: 32px;
+    gap: 16px;
+    padding: 24px 20px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    border-radius: 14px;
     transition: all 0.3s ease;
 }
 
@@ -675,29 +681,29 @@
 
 .why-icon {
     flex-shrink: 0;
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(33, 150, 243, 0.2));
-    border-radius: 14px;
-    font-size: 28px;
+    border-radius: 12px;
+    font-size: 24px;
     color: #4CAF50;
 }
 
 .why-content h3 {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: #fff;
 }
 
 .why-content p {
-    font-size: 15px;
+    font-size: 13px;
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.4;
 }
 
 /* Categories Grid */
@@ -927,32 +933,6 @@
     color: #4CAF50;
 }
 
-.creator-quote {
-    margin-top: 25px;
-    padding: 20px 25px;
-    background: rgba(255, 255, 255, 0.05);
-    border-left: 3px solid #4CAF50;
-    border-radius: 8px;
-    position: relative;
-}
-
-.quote-icon {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    font-size: 24px;
-    color: rgba(76, 175, 80, 0.3);
-}
-
-.creator-quote p {
-    font-size: 15px;
-    line-height: 1.8;
-    color: rgba(255, 255, 255, 0.9);
-    font-style: italic;
-    margin: 0;
-    padding-left: 35px;
-}
-
 /* Creator Portfolio */
 .creator-portfolio {
     margin-top: 35px;
@@ -1053,7 +1033,7 @@
     }
 
     .why-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -1089,8 +1069,15 @@
         font-size: 28px;
     }
 
+    /* Tetap 2 kolom untuk tablet/android landscape */
     .features-grid,
     .tech-grid,
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    /* Contact tetap 1 kolom di tablet */
     .contact-grid {
         grid-template-columns: 1fr;
     }
@@ -1121,10 +1108,6 @@
 
     .creator-skills {
         justify-content: center;
-    }
-
-    .creator-quote {
-        text-align: left;
     }
 
     .portfolio-grid {
@@ -1174,6 +1157,83 @@
         font-size: 24px;
     }
 
+    /* Tetap 2 kolom untuk android portrait/mobile dengan ukuran lebih kecil */
+    .features-grid,
+    .tech-grid,
+    .why-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    /* Feature items - lebih kompak */
+    .feature-item {
+        padding: 24px 16px;
+        border-radius: 16px;
+    }
+
+    .feature-icon {
+        font-size: 40px;
+        margin-bottom: 14px;
+    }
+
+    .feature-item h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .feature-item p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    /* Tech items - lebih kompak */
+    .tech-item {
+        padding: 18px 14px;
+        gap: 12px;
+        border-radius: 12px;
+    }
+
+    .tech-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+        border-radius: 10px;
+    }
+
+    .tech-content h3 {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .tech-content p {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    /* Why items - lebih kompak */
+    .why-item {
+        padding: 18px 14px;
+        gap: 12px;
+        border-radius: 12px;
+    }
+
+    .why-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+        border-radius: 10px;
+    }
+
+    .why-content h3 {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+
+    .why-content p {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
     .creator-wrapper {
         gap: 30px;
     }
@@ -1194,15 +1254,6 @@
 
     .creator-bio {
         font-size: 15px;
-    }
-
-    .creator-quote {
-        padding: 18px 20px;
-    }
-
-    .creator-quote p {
-        padding-left: 30px;
-        font-size: 14px;
     }
 
     .category-badge,
