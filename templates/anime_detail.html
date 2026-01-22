@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ anime.title if anime else 'Detail Anime' }} - DayyStream{% endblock %}
+{% block title %}{{ anime.english if anime.english else (anime.title if anime.title else anime.japanese) if anime else 'Detail Anime' }} - DayyStream{% endblock %}
 
 {% block content %}
 
@@ -10,13 +10,13 @@
     <div class="hero-premium">
         <div class="hero-container">
             <div class="hero-poster-wrapper">
-                <img src="{{ anime.poster }}" alt="{{ anime.title }}" class="hero-poster-img" loading="lazy">
+                <img src="{{ anime.poster }}" alt="{{ anime.english if anime.english else (anime.title if anime.title else anime.japanese) }}" class="hero-poster-img" loading="lazy">
             </div>
             
             <div class="hero-info">
                 <div class="title-section">
-                    <h1 class="anime-title-premium">{{ anime.title }}</h1>
-                    {% if anime.japanese %}
+                    <h1 class="anime-title-premium">{{ anime.english if anime.english else (anime.title if anime.title else anime.japanese) }}</h1>
+                    {% if anime.japanese and (anime.english or (anime.title and anime.title != anime.japanese)) %}
                     <p class="anime-subtitle-premium">{{ anime.japanese }}</p>
                     {% endif %}
                     
@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const urlPath = window.location.pathname;
     const animeIdFromUrl = urlPath.split('/anime/')[1]?.split('?')[0]?.split('#')[0] || '';
     
-    const animeTitle = {{ anime.title|tojson }} || {{ anime.english|tojson }} || {{ anime.japanese|tojson }} || 'Unknown Title';
+    const animeTitle = {{ anime.english|tojson }} || {{ anime.title|tojson }} || {{ anime.japanese|tojson }} || 'Unknown Title';
     
     window.animeData = {
         animeId: animeIdFromUrl,
