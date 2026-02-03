@@ -97,9 +97,18 @@
             
             <!-- Video Player -->
             <div class="player-wrapper-premium">
+                <div id="video-overlay" class="video-overlay">
+                    <button id="play-button" class="play-button-overlay">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <span>Play Video</span>
+                    </button>
+                </div>
                 <iframe id="video-player" 
                         src="{{ episode.defaultStreamingUrl if episode.defaultStreamingUrl else '' }}"
-                        allowfullscreen>
+                        allowfullscreen
+                        style="display: none;">
                 </iframe>
             </div>
             
@@ -111,7 +120,7 @@
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M15 18l-6-6 6-6"/>
                     </svg>
-                    <span>Prev</span>
+                    <span>Previous</span>
                 </a>
                 {% endif %}
                 
@@ -610,6 +619,65 @@
     border: none;
 }
 
+/* Video Overlay & Play Button */
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.9) 0%, rgba(192, 57, 43, 0.9) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.video-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.play-button-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 140px;
+    height: 140px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    padding: 0;
+}
+
+.play-button-overlay:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #ffffff;
+}
+
+.play-button-overlay svg {
+    color: white;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.play-button-overlay span {
+    position: absolute;
+    bottom: -45px;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
 /* Genre Pills - SIMPLIFIED */
 .genre-pills {
     display: flex;
@@ -952,6 +1020,21 @@
     .ep-num {
         font-size: 20px;
     }
+    
+    .play-button-overlay {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .play-button-overlay svg {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .play-button-overlay span {
+        font-size: 14px;
+        bottom: -35px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -976,6 +1059,21 @@
         padding: 12px 20px;
         font-size: 13px;
     }
+    
+    .play-button-overlay {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .play-button-overlay svg {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .play-button-overlay span {
+        font-size: 12px;
+        bottom: -30px;
+    }
 }
 
 /* Performance Optimizations */
@@ -989,6 +1087,47 @@
 </style>
 
 <script>
+// Pre-play Ad System - Variables
+let clickedOnce = false;
+const adUrl = 'https://www.effectivegatecpm.com/hus3hct7?key=57e4b7670ee553bbc6a6cccc83d5c4f4';
+
+// Play Button Click Handler
+document.addEventListener('DOMContentLoaded', function() {
+    const playButton = document.getElementById('play-button');
+    const videoOverlay = document.getElementById('video-overlay');
+    const videoPlayer = document.getElementById('video-player');
+    
+    if (playButton && videoOverlay && videoPlayer) {
+        playButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (!clickedOnce) {
+                // First click: Open ad in new tab
+                clickedOnce = true;
+                window.open(adUrl, '_blank');
+                
+                // Update button text to indicate second click needed
+                const buttonText = playButton.querySelector('span');
+                if (buttonText) {
+                    buttonText.textContent = 'Click Again to Play';
+                }
+            } else {
+                // Second click: Hide overlay and show video
+                videoOverlay.classList.add('hidden');
+                videoPlayer.style.display = 'block';
+            }
+        });
+    }
+    
+    // Auto open episodes
+    const wrapper = document.getElementById('episodeListWrapper');
+    const toggle = document.getElementById('episodeToggle');
+    if (wrapper && toggle) {
+        wrapper.classList.add('open');
+        toggle.classList.add('open');
+    }
+});
+
 // Toggle Episodes
 function toggleEpisodeList() {
     const wrapper = document.getElementById('episodeListWrapper');
@@ -997,16 +1136,6 @@ function toggleEpisodeList() {
     wrapper.classList.toggle('open');
     toggle.classList.toggle('open');
 }
-
-// Auto open episodes
-document.addEventListener('DOMContentLoaded', function() {
-    const wrapper = document.getElementById('episodeListWrapper');
-    const toggle = document.getElementById('episodeToggle');
-    if (wrapper && toggle) {
-        wrapper.classList.add('open');
-        toggle.classList.add('open');
-    }
-});
 
 function showQuality(quality) {
     // Remove active class from all tabs
@@ -1046,7 +1175,24 @@ async function changeServer(serverId) {
         const data = await response.json();
         
         if (data.url) {
-            document.getElementById('video-player').src = data.url;
+            // Reset ad system when changing server
+            clickedOnce = false;
+            const videoOverlay = document.getElementById('video-overlay');
+            const videoPlayer = document.getElementById('video-player');
+            const playButton = document.getElementById('play-button');
+            
+            // Update video source
+            videoPlayer.src = data.url;
+            
+            // Show overlay again
+            videoOverlay.classList.remove('hidden');
+            videoPlayer.style.display = 'none';
+            
+            // Reset button text
+            const buttonText = playButton.querySelector('span');
+            if (buttonText) {
+                buttonText.textContent = 'Play Video';
+            }
         } else {
             alert('Gagal memuat server. Silakan coba server lain.');
         }
