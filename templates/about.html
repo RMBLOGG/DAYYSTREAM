@@ -370,6 +370,42 @@
         </div>
     </section>
 
+    <!-- Support Section -->
+    <section class="about-section support-section">
+        <div class="section-header">
+            <i class="fas fa-heart section-icon" style="color: #ff4444;"></i>
+            <h2>Dukung DAYYSTREAM</h2>
+        </div>
+        <div class="support-content">
+            <p class="support-text">
+                DAYYSTREAM dibuat dan dikelola secara mandiri dengan penuh dedikasi. Jika kamu menikmati layanan ini dan ingin membantu kami terus berkembang, dukunganmu sangat berarti bagi kami!
+            </p>
+            <div class="support-benefits">
+                <div class="benefit-item">
+                    <i class="fas fa-server"></i>
+                    <span>Membantu biaya server agar tetap online 24/7</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>Mendukung update konten lebih cepat</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-wrench"></i>
+                    <span>Memungkinkan pengembangan fitur baru</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-smile"></i>
+                    <span>Membuat developer tetap semangat berkarya</span>
+                </div>
+            </div>
+            <a href="https://sociabuzz.com/dayynime/tribe" target="_blank" class="support-btn">
+                <i class="fas fa-heart"></i>
+                <span>Beri Dukungan Sekarang</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
     <!-- Footer Note -->
     <div class="about-footer">
         <i class="fas fa-torii-gate footer-icon"></i>
@@ -1025,6 +1061,93 @@
     font-size: 11px;
 }
 
+/* Support Section */
+.support-section {
+    background: linear-gradient(135deg, rgba(255, 68, 68, 0.08), rgba(255, 152, 0, 0.08));
+    border: 2px solid rgba(255, 68, 68, 0.3);
+    border-radius: 24px;
+    padding: 50px 40px;
+}
+
+.support-section .section-icon {
+    filter: drop-shadow(0 0 20px rgba(255, 68, 68, 0.5));
+}
+
+.support-text {
+    font-size: 18px;
+    line-height: 2;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 35px;
+    max-width: 900px;
+}
+
+.support-benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 68, 68, 0.2);
+    border-radius: 14px;
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.85);
+    transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+    background: linear-gradient(135deg, rgba(255, 68, 68, 0.12), rgba(255, 152, 0, 0.12));
+    border-color: rgba(255, 68, 68, 0.4);
+    transform: translateX(6px);
+}
+
+.benefit-item i {
+    font-size: 22px;
+    color: #ff4444;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px rgba(255, 68, 68, 0.5));
+}
+
+.support-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 30px rgba(255, 68, 68, 0.4);
+    letter-spacing: 0.5px;
+}
+
+.support-btn:hover {
+    background: linear-gradient(135deg, #ff6666, #ff0000);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(255, 68, 68, 0.5);
+    color: #fff;
+    text-decoration: none;
+}
+
+.support-btn i:first-child {
+    font-size: 20px;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .features-grid,
@@ -1082,6 +1205,14 @@
         grid-template-columns: 1fr;
     }
 
+    .support-benefits {
+        grid-template-columns: 1fr;
+    }
+
+    .support-section {
+        padding: 35px 25px;
+    }
+
     .about-section {
         margin-bottom: 60px;
     }
@@ -1121,6 +1252,11 @@
 
     .about-footer p {
         font-size: 18px;
+    }
+
+    .support-btn {
+        font-size: 16px;
+        padding: 16px 28px;
     }
 }
 
