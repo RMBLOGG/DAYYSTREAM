@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DayyStream — Website Telah Dipindahkan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red:        #e53935;
+            --red-dark:   #b71c1c;
+            --red-light:  #ef5350;
+            --red-08:     rgba(229, 57, 53, 0.08);
+            --red-15:     rgba(229, 57, 53, 0.15);
+            --red-30:     rgba(229, 57, 53, 0.30);
+            --bg:         #0d0d0d;
+            --bg-card:    #161616;
+            --bg-elevated:#1e1e1e;
+            --text:       #f0f0f0;
+            --text-dim:   rgba(240, 240, 240, 0.45);
+            --border:     rgba(229, 57, 53, 0.20);
+            --font:       'Inter', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            overflow: hidden;
+        }
+
+        /* Subtle noise texture via radial gradients */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 10%, rgba(229,57,53,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 90%, rgba(183,28,28,0.06) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Card ── */
+        .card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2.25rem 1.75rem 2rem;
+            text-align: center;
+            box-shadow:
+                0 0 0 1px rgba(229,57,53,0.06),
+                0 20px 60px rgba(0,0,0,0.7),
+                0 0 40px rgba(229,57,53,0.05);
+        }
+
+        /* Red top accent line */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red-dark), var(--red), var(--red-light), var(--red-dark));
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 0 20px rgba(229,57,53,0.5);
+        }
+
+        /* ── Logo area ── */
+        .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 44px; height: 44px;
+            background: var(--red);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 20px rgba(229,57,53,0.45);
+            animation: pulse 3s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        .logo-icon i { color: #fff; font-size: 1.2rem; }
+
+        .logo-name {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--text);
+        }
+
+        @keyframes pulse {
+            0%,100% { box-shadow: 0 4px 16px rgba(229,57,53,0.4); }
+            50%      { box-shadow: 0 4px 32px rgba(229,57,53,0.7); }
+        }
+
+        /* ── Divider ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin: 0 0 1.5rem;
+        }
+
+        /* ── Warning badge ── */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.85rem;
+            background: var(--red-08);
+            border: 1px solid var(--red-30);
+            border-radius: 99px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--red-light);
+            margin-bottom: 1rem;
+        }
+        .badge .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+            animation: blink 1.4s ease-in-out infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.1} }
+
+        /* ── Headline ── */
+        .headline {
+            font-size: 1.7rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 0.65rem;
+            letter-spacing: -0.3px;
+        }
+        .headline span { color: var(--red); }
+
+        /* ── Subtext ── */
+        .subtext {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            line-height: 1.75;
+            margin-bottom: 1.75rem;
+        }
+
+        /* ── URL box ── */
+        .url-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--red);
+            opacity: 0.55;
+            margin-bottom: 0.5rem;
+        }
+        .url-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            padding: 0.75rem 1rem;
+            background: var(--red-08);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--red-light);
+            word-break: break-all;
+        }
+        .url-box i { opacity: 0.6; font-size: 0.8rem; flex-shrink: 0; }
+
+        /* ── CTA Button ── */
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            padding: 0.9rem 1.5rem;
+            background: var(--red);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: var(--font);
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            box-shadow: 0 6px 24px rgba(229,57,53,0.35);
+            margin-bottom: 1.25rem;
+        }
+        .cta-btn:hover {
+            background: var(--red-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(229,57,53,0.5);
+        }
+        .cta-btn:active { transform: translateY(0); }
+
+        /* ── Countdown ── */
+        .countdown-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .countdown-text {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-dim);
+        }
+        .countdown-text b {
+            color: var(--red-light);
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        /* ── Progress bar ── */
+        .progress-wrap {
+            width: 100%;
+            height: 3px;
+            background: rgba(229,57,53,0.12);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red-dark), var(--red), var(--red-light));
+            border-radius: 99px;
+            width: 100%;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <!-- Logo -->
+    <div class="logo-row">
+        <div class="logo-icon">
+            <i class="fas fa-play"></i>
+        </div>
+        <span class="logo-name">DAYYSTREAM</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="badge">
+        <span class="dot"></span>
+        Pemberitahuan
+    </div>
+
+    <h1 class="headline">Website Telah<br><span>Dipindahkan</span></h1>
+
+    <p class="subtext">
+        DayyStream kini telah berpindah ke domain baru.<br>
+        Semua konten anime tersedia lengkap di alamat berikut:
+    </p>
+
+    <p class="url-label">Alamat Baru</p>
+    <div class="url-box">
+        <i class="fas fa-globe"></i>
+        animeku.id
+    </div>
+
+    <a href="{{ destination }}" class="cta-btn" id="goBtn">
+        <i class="fas fa-arrow-right"></i>
+        Pergi ke Halaman Baru
+    </a>
+
+    <div class="countdown-wrap">
+        <p class="countdown-text">
+            Otomatis pindah dalam <b id="countdown">5</b> detik...
+        </p>
+        <div class="progress-wrap">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const SECONDS = 5;
+    const dest    = {{ destination | tojson }};
+    const el      = document.getElementById('countdown');
+    const bar     = document.getElementById('progressBar');
+
+    bar.style.transition = `transform ${SECONDS}s linear`;
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            bar.style.transform = 'scaleX(1)';
+        });
+    });
+
+    let t = SECONDS;
+    const iv = setInterval(() => {
+        t--;
+        el.textContent = t;
+        if (t <= 0) {
+            clearInterval(iv);
+            window.location.href = dest;
+        }
+    }, 1000);
+</script>
+
+</body>
+  </html>
+  
