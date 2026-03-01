@@ -1,10 +1,34 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, redirect
 import requests
 import time
 import threading
 
 app = Flask(__name__)
 API_BASE = "https://www.sankavollerei.com"
+
+# ============ REDIRECT — WEBSITE PINDAH KE ANIMEKU.ID ============
+NEW_DOMAIN = "https://animeku-id.vercel.app"
+BYPASS_PATHS = ['/static/', '/api/proxy-image']  # jangan intercept static files
+
+@app.before_request
+def show_moved_warning():
+    path = request.path
+    # Lewati static files & image proxy
+    for bp in BYPASS_PATHS:
+        if path.startswith(bp):
+            return None
+    # Kalau user sudah konfirmasi (dari tombol di halaman peringatan)
+    if request.args.get('confirmed') == '1':
+        new_url = NEW_DOMAIN + path
+        qs = {k: v for k, v in request.args.items() if k != 'confirmed'}
+        if qs:
+            from urllib.parse import urlencode
+            new_url += '?' + urlencode(qs)
+        return redirect(new_url, code=302)
+    # Tampilkan halaman peringatan
+    destination = NEW_DOMAIN + request.full_path.rstrip('?')
+    return render_template('moved.html', destination=destination)
+# ================================================================
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
